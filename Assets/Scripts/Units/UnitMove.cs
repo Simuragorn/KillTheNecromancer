@@ -1,3 +1,4 @@
+using Assets.Scripts.Constants;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,43 +9,44 @@ public class UnitMove : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject gameObjectForFlip;
+    [SerializeField] Unit unit;
 
-    [SerializeField] float maxRandomOffset;
+    public bool isFlipped { private set; get; }
 
-    public void SetTarget(Vector2 target)
+    public void ChaseEnemy(Vector2 target)
     {
-        float offsetX = Random.Range(0, maxRandomOffset);
-        float offsetY = Random.Range(0, maxRandomOffset);
-        targetPosition = new Vector2(target.x + offsetX, target.y + offsetY);
+        targetPosition = new Vector2(target.x, target.y);
+    }
+
+    public void MoveTo(Vector2 target)
+    {
+        targetPosition = new Vector2(target.x, target.y);
+    }
+
+    public void Flip()
+    {
+        isFlipped = !isFlipped;
+        float xScale = isFlipped ? -1 : 1;
+        gameObjectForFlip.transform.localScale = new Vector3(xScale, gameObjectForFlip.transform.localScale.y, gameObjectForFlip.transform.localScale.z);
     }
 
     private void Update()
     {
-        Move();
-    }
-
-    private void Move()
-    {
         if (targetPosition.HasValue)
         {
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition.Value, speed * Time.deltaTime);
-            var xLeading = (targetPosition.Value - (Vector2)transform.position).x;
-
-            float xScale = gameObjectForFlip.transform.localScale.x;
-            if (xScale > 0 && xLeading < 0)
-            {
-                xScale = -1;
-            }
-            if (xScale < 0 && xLeading > 0)
-            {
-                xScale = 1;
-            }
-            gameObjectForFlip.transform.localScale = new Vector3(xScale, gameObjectForFlip.transform.localScale.y, gameObjectForFlip.transform.localScale.z);
-            animator.SetFloat("xMove", Mathf.Abs(xLeading));
+            Move();
         }
         else
         {
             animator.SetFloat("xMove", 0);
         }
+    }
+
+    private void Move()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, targetPosition.Value, speed * Time.deltaTime);
+        var xLeading = (targetPosition.Value - (Vector2)transform.position).x;
+
+        animator.SetFloat("xMove", Mathf.Abs(xLeading));
     }
 }

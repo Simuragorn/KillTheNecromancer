@@ -1,3 +1,4 @@
+using Assets.Scripts.Constants;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class UnitSight : MonoBehaviour
 
         if (enemyCollider != null)
         {
-            unit.MoveToPosition(enemyCollider.transform.position);
+            unit.MoveToPosition(enemyCollider.transform.position, MoveTypeEnum.ToEnemy);
         }
     }
 }
