@@ -5,21 +5,21 @@ using UnityEngine;
 
 public class UnitsSelection : MonoBehaviour
 {
-    public Dictionary<GameObject, Unit> AllGameObjectUnits;
-    public List<Unit> selectedUnits { private set; get; } = new List<Unit>();
+    public Dictionary<GameObject, SelectableUnit> AllGameObjectUnits;
+    public List<SelectableUnit> selectedUnits { private set; get; } = new List<SelectableUnit>();
 
     public static UnitsSelection Instance { get; private set; }
     private void Awake()
     {
         Instance = this;
-        AllGameObjectUnits = new Dictionary<GameObject, Unit>();
-        selectedUnits = new List<Unit>();
+        AllGameObjectUnits = new Dictionary<GameObject, SelectableUnit>();
+        selectedUnits = new List<SelectableUnit>();
     }
 
     public void ClickSelect(GameObject gameObject)
     {
         DeselectAll();
-        if (AllGameObjectUnits.TryGetValue(gameObject, out Unit unit))
+        if (AllGameObjectUnits.TryGetValue(gameObject, out SelectableUnit unit))
         {
             selectedUnits.Add(unit);
             unit.SelectOrDeselect(true);
@@ -27,7 +27,7 @@ public class UnitsSelection : MonoBehaviour
     }
     public void ShiftClickSelect(GameObject gameObject)
     {
-        if (AllGameObjectUnits.TryGetValue(gameObject, out Unit unit))
+        if (AllGameObjectUnits.TryGetValue(gameObject, out SelectableUnit unit))
         {
             bool isAdd = !selectedUnits.Contains(unit);
             if (isAdd)
@@ -43,7 +43,7 @@ public class UnitsSelection : MonoBehaviour
     }
     public void DragClickSelect(GameObject gameObject)
     {
-        if (AllGameObjectUnits.TryGetValue(gameObject, out Unit unit))
+        if (AllGameObjectUnits.TryGetValue(gameObject, out SelectableUnit unit))
         {
             if (!selectedUnits.Contains(unit))
             {
@@ -63,8 +63,8 @@ public class UnitsSelection : MonoBehaviour
         List<Vector3> positions = GetPositionsListAround(targetPosition, new float[] { 1f, 2f, 3f }, new int[] { 5, 10, 20 });
         for (int i = 0; i < selectedUnits.Count; ++i)
         {
-            Unit selectedUnit = selectedUnits[i];
-            selectedUnit.MoveTo(positions[i], MoveTypeEnum.ToPosition);
+            SelectableUnit selectedUnit = selectedUnits[i];
+            selectedUnit.Unit.MoveTo(positions[i], MoveTypeEnum.ToPosition);
         }
     }
 

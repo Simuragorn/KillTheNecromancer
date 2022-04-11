@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemiesController : MonoBehaviour
 {
     public static EnemiesController Instance { private set; get; }
-    public Dictionary<GameObject, Enemy> Enemies { get; set; }
+    public Dictionary<GameObject, Unit> Enemies { get; set; }
 
     private void Awake()
     {
@@ -15,6 +15,6 @@ public class EnemiesController : MonoBehaviour
             return;
         }
         Instance = this;
-        Enemies = new Dictionary<GameObject, Enemy>();
+        Enemies = new Dictionary<GameObject, Unit>();
     }
 }

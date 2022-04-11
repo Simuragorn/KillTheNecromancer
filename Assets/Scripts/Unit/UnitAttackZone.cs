@@ -11,7 +11,7 @@ public class UnitAttackZone : MonoBehaviour
     public float Widht { get; private set; }
     public float Height { get; private set; }
 
-    public Enemy EnemyTarget { get; private set; }
+    public Unit EnemyTarget { get; private set; }
 
 
     private void Start()
@@ -24,7 +24,7 @@ public class UnitAttackZone : MonoBehaviour
     {
         if (unit.CurrentState != UnitStateEnum.Attacking)
         {
-            if (EnemiesController.Instance.Enemies.TryGetValue(collision.gameObject, out Enemy enemy))
+            if (EnemiesController.Instance.Enemies.TryGetValue(collision.gameObject, out Unit enemy))
             {
                 unit.StartAttack();
                 EnemyTarget = enemy;

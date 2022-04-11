@@ -171,6 +171,8 @@ GameObject:
   - component: {fileID: 5181547669956255135}
   - component: {fileID: 8409847960599893116}
   - component: {fileID: 926962119}
+  - component: {fileID: 8850688866072502048}
+  - component: {fileID: 926962113}
   m_Layer: 10
   m_Name: DamagedSkeleton
   m_TagString: Untagged
@@ -294,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3af092962832a843a22b4f8ca49a52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightDistance: 5
+  sightRange: 5
   enemyLayer:
     serializedVersion: 2
     m_Bits: 2048
@@ -311,11 +313,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82fcc947d8a37204ca2f1984634c7a1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedImage: {fileID: 914201885}
   unitPosition: {fileID: 914201884}
   unitMove: {fileID: 7657833526420041873}
   animator: {fileID: 6837075293236848611}
   attackZone: {fileID: 9006277457368191182}
+  health: {fileID: 8850688866072502048}
 --- !u!61 &8409847960599893116
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -370,3 +372,30 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
+--- !u!114 &8850688866072502048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837075293236848610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8396c2da592dad24eb9837f16e7485bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 20
+--- !u!114 &926962113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837075293236848610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec13094c4216194aa06d36435500ba0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedImage: {fileID: 914201885}
+  _unit: {fileID: 5181547669956255135}

@@ -57,7 +57,7 @@ public class UnitMove : MonoBehaviour
     private void FixedUpdate()
     {
         UpdatePath();
-        if (pathEnded)
+        if (pathEnded || unit.IsUnitPositionFreezed())
         {
             animator.SetFloat("xMove", 0);
             return;
