@@ -1,13 +1,13 @@
 using Assets.Scripts.Constants;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitSight : MonoBehaviour
 {
     [SerializeField] private float sightDistance;
-    [SerializeField] private LayerMask enemy;
+    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private Unit unit;
+
+    private int framesPerSight = 4;
     void Update()
     {
         Sight();
@@ -15,11 +15,20 @@ public class UnitSight : MonoBehaviour
 
     private void Sight()
     {
-        var enemyCollider = Physics2D.OverlapCircle(transform.position, sightDistance, enemy);
+        if (Time.frameCount % framesPerSight > 0)
+        {
+            return;
+        }
+
+
+        Collider2D enemyCollider = Physics2D.OverlapCircle(transform.position, sightDistance, enemyLayer);
 
         if (enemyCollider != null)
         {
-            unit.MoveToPosition(enemyCollider.transform.position, MoveTypeEnum.ToEnemy);
+            if (unit.IsChasingAvailable())
+            {
+                unit.MoveTo(enemyCollider.transform.position, MoveTypeEnum.ToEnemy);
+            }
         }
     }
 }

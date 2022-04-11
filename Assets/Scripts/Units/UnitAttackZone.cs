@@ -42,6 +42,9 @@ public class UnitAttackZone : MonoBehaviour
 
     public void DealDamage()
     {
-        EnemyTarget.GetDamage(damage);
+        if (EnemyTarget != null)
+        {
+            EnemyTarget.GetDamage(damage);
+        }
     }
 }

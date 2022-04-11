@@ -11,11 +11,6 @@ public class Enemy : MonoBehaviour
         EnemiesController.Instance.Enemies.Add(gameObject, this);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void GetDamage(int damage)
     {

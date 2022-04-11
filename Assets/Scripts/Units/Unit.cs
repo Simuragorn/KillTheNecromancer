@@ -1,6 +1,4 @@
 using Assets.Scripts.Constants;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -30,17 +28,22 @@ public class Unit : MonoBehaviour
         selectedImage.enabled = _isSelected;
     }
 
-    public void MoveToPosition(Vector2 targetPosition, MoveTypeEnum moveType)
+    public bool IsChasingAvailable()
     {
+        return CurrentState != UnitStateEnum.Chasing && 
+            CurrentState != UnitStateEnum.Attacking;
+    }
 
-        targetPosition -= (Vector2)unitPosition.transform.localPosition;
-        CurrentState = UnitStateEnum.Moving;
+    public void MoveTo(Vector2 targetPosition, MoveTypeEnum moveType)
+    {
         if (moveType == MoveTypeEnum.ToEnemy)
         {
             ChaseEnemy(targetPosition);
         }
         else
         {
+            CurrentState = UnitStateEnum.Moving;
+            targetPosition -= (Vector2)unitPosition.transform.localPosition;
             unitMove.MoveTo(targetPosition);
         }
     }
@@ -53,9 +56,9 @@ public class Unit : MonoBehaviour
 
     public void Attack()
     {
-        attackZone.DealDamage();
         if (attackZone.EnemyTarget != null)
         {
+            attackZone.DealDamage();
             animator.SetTrigger("StartAttack");
         }
         else
@@ -66,22 +69,19 @@ public class Unit : MonoBehaviour
 
     private void ChaseEnemy(Vector2 targetPosition)
     {
-        Vector2 direction = targetPosition - (Vector2)transform.position;
+        if (CurrentState == UnitStateEnum.Chasing)
+        {
+            return;
+        }
+        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
 
-        if (targetPosition.x < transform.position.x && !unitMove.isFlipped)
-        {
-            unitMove.Flip();
-        }
-        else if (targetPosition.x > transform.position.x && unitMove.isFlipped)
-        {
-            unitMove.Flip();
-        }
         CurrentState = UnitStateEnum.Chasing;
-        targetPosition += (Vector2)attackZone.transform.localPosition;
+        float attackDistance = Mathf.Min(attackZone.Widht, attackZone.Height) / 2;
+        targetPosition -= direction * attackDistance;
         unitMove.MoveTo(targetPosition);
     }
 
-    private void ResetState()
+    public void ResetState()
     {
         CurrentState = UnitStateEnum.Idle;
     }

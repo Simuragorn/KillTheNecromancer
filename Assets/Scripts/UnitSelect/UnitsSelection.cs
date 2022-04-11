@@ -6,7 +6,7 @@ using UnityEngine;
 public class UnitsSelection : MonoBehaviour
 {
     public Dictionary<GameObject, Unit> AllGameObjectUnits;
-    private List<Unit> selectedUnits = new List<Unit>();
+    public List<Unit> selectedUnits { private set; get; } = new List<Unit>();
 
     public static UnitsSelection Instance { get; private set; }
     private void Awake()
@@ -64,7 +64,7 @@ public class UnitsSelection : MonoBehaviour
         for (int i = 0; i < selectedUnits.Count; ++i)
         {
             Unit selectedUnit = selectedUnits[i];
-            selectedUnit.MoveToPosition(positions[i], MoveTypeEnum.ToPosition);
+            selectedUnit.MoveTo(positions[i], MoveTypeEnum.ToPosition);
         }
     }
 
