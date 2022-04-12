@@ -7,8 +7,8 @@ public class SelectableUnit : MonoBehaviour
 {
     private bool _isSelected;
     [SerializeField] private SpriteRenderer selectedImage;
-    [SerializeField] private Unit _unit;
-    public Unit Unit => _unit;
+    [SerializeField] private UnitController _unit;
+    public UnitController Unit => _unit;
     private void Awake()
     {
         SelectOrDeselect(false);

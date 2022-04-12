@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemiesController : MonoBehaviour
+public class EnemyUnitsManager : MonoBehaviour
 {
-    public static EnemiesController Instance { private set; get; }
-    public Dictionary<GameObject, Unit> Enemies { get; set; }
+    public static EnemyUnitsManager Instance { private set; get; }
+    public Dictionary<GameObject, UnitController> Enemies { get; set; }
 
     private void Awake()
     {
@@ -15,6 +15,7 @@ public class EnemiesController : MonoBehaviour
             return;
         }
         Instance = this;
-        Enemies = new Dictionary<GameObject, Unit>();
+        Enemies = new Dictionary<GameObject, UnitController>();
     }
 }
+

@@ -318,6 +318,7 @@ MonoBehaviour:
   animator: {fileID: 6837075293236848611}
   attackZone: {fileID: 9006277457368191182}
   health: {fileID: 8850688866072502048}
+  unitId: 1
 --- !u!61 &8409847960599893116
 BoxCollider2D:
   m_ObjectHideFlags: 0

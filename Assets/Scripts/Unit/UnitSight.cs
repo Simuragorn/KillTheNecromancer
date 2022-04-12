@@ -5,7 +5,7 @@ public class UnitSight : MonoBehaviour
 {
     [SerializeField] private float sightRange;
     [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private Unit unit;
+    [SerializeField] private UnitController unit;
 
     private int framesPerSight = 4;
     void Update()

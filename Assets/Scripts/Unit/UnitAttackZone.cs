@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class UnitAttackZone : MonoBehaviour
 {
-    [SerializeField] private Unit unit;
+    [SerializeField] private UnitController unit;
     [SerializeField] private BoxCollider2D boxCollider;
     [SerializeField] private int damage;
     public float Widht { get; private set; }
     public float Height { get; private set; }
 
-    public Unit EnemyTarget { get; private set; }
+    public UnitController EnemyTarget { get; private set; }
 
 
     private void Start()
@@ -24,7 +24,7 @@ public class UnitAttackZone : MonoBehaviour
     {
         if (unit.CurrentState != UnitStateEnum.Attacking)
         {
-            if (EnemiesController.Instance.Enemies.TryGetValue(collision.gameObject, out Unit enemy))
+            if (EnemyUnitsManager.Instance.Enemies.TryGetValue(collision.gameObject, out UnitController enemy))
             {
                 unit.StartAttack();
                 EnemyTarget = enemy;
