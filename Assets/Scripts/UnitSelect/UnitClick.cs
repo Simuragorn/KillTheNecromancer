@@ -17,28 +17,33 @@ public class UnitClick : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
-            Vector2 targetPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-            List<Collider2D> colliders = Physics2D.OverlapPointAll(targetPosition, clickable).ToList();
-            var collider = colliders.FirstOrDefault();
-            if (collider != null)
-            {
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    UnitsSelection.Instance.ShiftClickSelect(collider.gameObject);
-                }
-                else
-                {
-                    UnitsSelection.Instance.ClickSelect(collider.gameObject);
-                }
-            }
-            else
-            {
-                UnitsSelection.Instance.MoveToPosition(targetPosition);
-            }
+            SelectUnitOrMove();
         }
         if (Input.GetMouseButtonDown(1))
         {
             UnitsSelection.Instance.DeselectAll();
+        }
+    }
+
+    private void SelectUnitOrMove()
+    {
+        Vector2 targetPosition = camera.ScreenToWorldPoint(Input.mousePosition);
+        List<Collider2D> colliders = Physics2D.OverlapPointAll(targetPosition, clickable).ToList();
+        var collider = colliders.FirstOrDefault();
+        if (collider != null)
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                UnitsSelection.Instance.ShiftClickSelect(collider.gameObject);
+            }
+            else
+            {
+                UnitsSelection.Instance.ClickSelect(collider.gameObject);
+            }
+        }
+        else if (!UnitsSelection.Instance.DragSelection)
+        {
+            UnitsSelection.Instance.MoveToPosition(targetPosition);
         }
     }
 }

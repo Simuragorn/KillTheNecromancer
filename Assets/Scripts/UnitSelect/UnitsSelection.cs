@@ -9,6 +9,7 @@ public class UnitsSelection : MonoBehaviour
     public List<SelectableUnit> selectedUnits { private set; get; } = new List<SelectableUnit>();
 
     public static UnitsSelection Instance { get; private set; }
+    public bool DragSelection { get; set; }
     private void Awake()
     {
         Instance = this;

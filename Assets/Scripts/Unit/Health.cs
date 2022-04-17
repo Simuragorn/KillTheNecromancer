@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private int health;
+    private int health;
     public Action OnDeath;
+
+    public void Init(int startHealth)
+    {
+        health = startHealth;
+    }
 
     public void GetDamage(int damage)
     {

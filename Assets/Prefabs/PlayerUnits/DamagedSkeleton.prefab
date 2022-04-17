@@ -70,9 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68588442c40eacf469702a6567bc5b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unit: {fileID: 5181547669956255135}
   boxCollider: {fileID: 380836599}
-  damage: 4
 --- !u!1 &914201884
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,6 +171,7 @@ GameObject:
   - component: {fileID: 926962119}
   - component: {fileID: 8850688866072502048}
   - component: {fileID: 926962113}
+  - component: {fileID: 926455673}
   m_Layer: 10
   m_Name: DamagedSkeleton
   m_TagString: Untagged
@@ -296,10 +295,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3af092962832a843a22b4f8ca49a52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRange: 5
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 2048
   unit: {fileID: 5181547669956255135}
 --- !u!114 &5181547669956255135
 MonoBehaviour:
@@ -317,6 +312,7 @@ MonoBehaviour:
   unitMove: {fileID: 7657833526420041873}
   animator: {fileID: 6837075293236848611}
   attackZone: {fileID: 9006277457368191182}
+  sight: {fileID: 5855582790932015764}
   health: {fileID: 8850688866072502048}
   unitId: 1
 --- !u!61 &8409847960599893116
@@ -385,7 +381,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8396c2da592dad24eb9837f16e7485bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 20
 --- !u!114 &926962113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,3 +395,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedImage: {fileID: 914201885}
   _unit: {fileID: 5181547669956255135}
+--- !u!50 &926455673
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837075293236848610}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

@@ -16,4 +16,12 @@ public class Unit
     public int Damage => damage;
     [SerializeField] private float speed;
     public float Speed => speed;
+    [SerializeField] private LayerMask enemyLayer;
+    public LayerMask EnemyLayer => enemyLayer;
+    [SerializeField] private int health;
+    public int Health => health;
+    [SerializeField] private float reloadInSeconds;
+    public float ReloadInSeconds => reloadInSeconds;
+    [SerializeField] private float sightRange;
+    public float SightRange => sightRange;
 }

@@ -3,11 +3,16 @@ using UnityEngine;
 
 public class UnitSight : MonoBehaviour
 {
-    [SerializeField] private float sightRange;
-    [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private UnitController unit;
+    private float sightRange;
+    private UnitController unit;
 
     private int framesPerSight = 4;
+
+    public void Init(UnitController controller)
+    {
+        unit = controller;
+        sightRange = unit.Unit.SightRange;
+    }
     void Update()
     {
         Sight();
@@ -15,17 +20,18 @@ public class UnitSight : MonoBehaviour
 
     private void Sight()
     {
-        if (Time.frameCount % framesPerSight > 0)
+        if (Time.frameCount % framesPerSight > 0 ||
+            (!unit.IsFreeWay))
         {
             return;
         }
 
 
-        Collider2D enemyCollider = Physics2D.OverlapCircle(transform.position, sightRange, enemyLayer);
+        Collider2D enemyCollider = Physics2D.OverlapCircle(transform.position, sightRange, unit.Unit.EnemyLayer);
 
         if (enemyCollider != null)
         {
-            if (unit.IsNewPathAvailable())
+            if (unit.IsFreeWay)
             {
                 unit.MoveTo(enemyCollider.transform.position, MoveTypeEnum.ToEnemy);
             }

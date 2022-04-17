@@ -18,9 +18,32 @@ MonoBehaviour:
     cost: 5
     damage: 5
     speed: 2
-  currentUnit:
-    id: 1
-    unitName: DamagedSkeleton
-    cost: 5
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    health: 40
+    reloadInSeconds: 3
+    sightRange: 5
+  - id: 10
+    unitName: Knight
+    cost: 0
     damage: 5
-    speed: 2
+    speed: 4
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 1024
+    health: 35
+    reloadInSeconds: 2
+    sightRange: 5
+  currentUnit:
+    id: 10
+    unitName: Knight
+    cost: 0
+    damage: 5
+    speed: 4
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 1024
+    health: 35
+    reloadInSeconds: 2
+    sightRange: 5

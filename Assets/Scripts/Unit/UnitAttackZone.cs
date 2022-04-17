@@ -5,17 +5,22 @@ using UnityEngine;
 
 public class UnitAttackZone : MonoBehaviour
 {
-    [SerializeField] private UnitController unit;
+    private UnitController unit;
     [SerializeField] private BoxCollider2D boxCollider;
-    [SerializeField] private int damage;
+    private int damage;
+    private float reloadInSeconds;
+    public bool IsReloading { private set; get; }
     public float Widht { get; private set; }
     public float Height { get; private set; }
 
     public UnitController EnemyTarget { get; private set; }
 
-
-    private void Start()
+    public void Init(UnitController unitController)
     {
+        unit = unitController;
+        damage = unitController.Unit.Damage;
+        reloadInSeconds = unitController.Unit.ReloadInSeconds;
+
         Widht = boxCollider.size.x;
         Height = boxCollider.size.y;
     }
@@ -24,10 +29,14 @@ public class UnitAttackZone : MonoBehaviour
     {
         if (unit.CurrentState != UnitStateEnum.Attacking)
         {
-            if (EnemyUnitsManager.Instance.Enemies.TryGetValue(collision.gameObject, out UnitController enemy))
+            int targetLayer = 1 << collision.gameObject.layer;
+            if (targetLayer == unit.Unit.EnemyLayer)
             {
-                unit.StartAttack();
-                EnemyTarget = enemy;
+                TryGetTarget(collision.gameObject);
+                if (EnemyTarget != null)
+                {
+                    StartAttack();
+                }
             }
         }
     }
@@ -40,11 +49,52 @@ public class UnitAttackZone : MonoBehaviour
         }
     }
 
+    private void TryGetTarget(GameObject enemy)
+    {
+        UnitController enemyUnit;
+        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)unit.Unit.Id))
+        {
+            EnemyUnitsManager.Instance.Enemies.TryGetValue(enemy, out enemyUnit);
+        }
+        else
+        {
+            PlayerUnitsManager.Instance.PlayerUnits.TryGetValue(enemy, out enemyUnit);
+        }
+        EnemyTarget = enemyUnit;
+    }
+
+    private void StartAttack()
+    {
+        if (IsReloading)
+        {
+            return;
+        }
+
+        unit.StartAttack();
+    }
+
     public void DealDamage()
     {
         if (EnemyTarget != null)
         {
             EnemyTarget.GetDamage(damage);
+            StartCoroutine(ReloadAndAttack());
+        }
+    }
+
+    private IEnumerator ReloadAndAttack()
+    {
+        IsReloading = true;
+        yield return new WaitForSeconds(reloadInSeconds);
+        IsReloading = false;
+
+        if (EnemyTarget != null)
+        {
+            StartAttack();
+        }
+        else
+        {
+            unit.ResetState();
         }
     }
 }

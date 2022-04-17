@@ -7,34 +7,44 @@ public class UnitController : MonoBehaviour
     [SerializeField] private UnitMove unitMove;
     [SerializeField] private Animator animator;
     [SerializeField] private UnitAttackZone attackZone;
+    [SerializeField] private UnitSight sight;
     [SerializeField] private Health health;
     [SerializeField] private UnitEnum unitId;
+    public UnitEnum UnitId => unitId;
 
-    private Unit unit;
+    private UnitsCamp camp;
+
+    public Unit Unit { private set; get; }
 
     public UnitStateEnum CurrentState { get; private set; }
+    public bool IsFreeWay => CurrentState != UnitStateEnum.Chasing &&
+            CurrentState != UnitStateEnum.Attacking;
+
+    public bool IsPositionFreezed => CurrentState == UnitStateEnum.Attacking;
+
+    public void Init(UnitsCamp unitCamp)
+    {
+        camp = unitCamp;
+    }
 
 
     private void Start()
     {
-        unit = PlayerUnitsManager.Instance.GetUnitById(unitId);
+        Unit = PlayerUnitsManager.Instance.GetUnitById(UnitId);
         int currentLayer = 1 << gameObject.layer;
-        if (currentLayer == GameManager.Instance.EnemyLayer)
+        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)UnitId))
+        {
+            PlayerUnitsManager.Instance.PlayerUnits.Add(gameObject, this);
+        }
+        else
         {
             EnemyUnitsManager.Instance.Enemies.Add(gameObject, this);
         }
         health.OnDeath += Death;
-    }
 
-    public bool IsNewPathAvailable()
-    {
-        return CurrentState != UnitStateEnum.Chasing &&
-            CurrentState != UnitStateEnum.Attacking;
-    }
-
-    public bool IsUnitPositionFreezed()
-    {
-        return CurrentState == UnitStateEnum.Attacking;
+        attackZone.Init(this);
+        health.Init(Unit.Health);
+        sight.Init(this);
     }
 
     public void GetDamage(int damage)
@@ -67,7 +77,6 @@ public class UnitController : MonoBehaviour
         if (attackZone.EnemyTarget != null)
         {
             attackZone.DealDamage();
-            animator.SetTrigger("StartAttack");
         }
         else
         {
@@ -93,5 +102,22 @@ public class UnitController : MonoBehaviour
         }
         CurrentState = UnitStateEnum.Chasing;
         unitMove.MoveTo(targetPosition);
+
+        if (camp != null)
+        {
+            camp.EnemyUnitSpotted(targetPosition);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)Unit.Id))
+        {
+            PlayerUnitsManager.Instance.RemoveUnit(gameObject);
+        }
+        else
+        {
+            EnemyUnitsManager.Instance.RemoveUnit(gameObject);
+        }
     }
 }

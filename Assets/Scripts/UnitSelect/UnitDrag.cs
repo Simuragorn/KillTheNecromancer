@@ -71,7 +71,15 @@ public class UnitDrag : MonoBehaviour
             if (selectionBox.Contains(unitPosition))
             {
                 UnitsSelection.Instance.DragClickSelect(unit.Key);
+                StartCoroutine(OnDragSelection());
             }
         }
+    }
+
+    private IEnumerator OnDragSelection()
+    {
+        UnitsSelection.Instance.DragSelection = true;
+        yield return null;
+        UnitsSelection.Instance.DragSelection = false;
     }
 }
