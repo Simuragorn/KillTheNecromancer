@@ -15,18 +15,30 @@ public class UnitsCamp : MonoBehaviour
 
     private bool isEnemy => !UnitEnumExtensions.IsPlayerUnit((UnitEnum)unitPrefab.Unit.Id);
 
-    [SerializeField] public List<UnitController> Units { private set; get; }
+    public List<UnitController> Units { private set; get; }
 
     public void EnemyUnitSpotted(Vector2 targetPosition)
     {
         AllMoveTo(targetPosition, MoveTypeEnum.ToEnemy);
     }
 
+    public void RemoveUnit(UnitController unit)
+    {
+        if (Units.Contains(unit))
+        {
+            Units.Remove(unit);
+            if(Units.Count == 0)
+            {
+                Destroy(this);
+            }
+        }
+    }
+
     private void Start()
     {
         if (isEnemy)
         {
-            EnemyUnitsManager.Instance.EnemiesCamps.Add(this);
+            EnemyUnitsManager.Instance.AddCamp(this);
         }
 
         SpawnUnits();
@@ -60,10 +72,7 @@ public class UnitsCamp : MonoBehaviour
     {
         if (isEnemy)
         {
-            if (EnemyUnitsManager.Instance.EnemiesCamps.Contains(this))
-            {
-                EnemyUnitsManager.Instance.EnemiesCamps.Remove(this);
-            }
+            EnemyUnitsManager.Instance.RemoveCamp(this);
         }
     }
 }

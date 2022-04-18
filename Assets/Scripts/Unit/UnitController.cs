@@ -38,7 +38,7 @@ public class UnitController : MonoBehaviour
         }
         else
         {
-            EnemyUnitsManager.Instance.Enemies.Add(gameObject, this);
+            EnemyUnitsManager.Instance.AddUnit(this);
         }
         health.OnDeath += Death;
 

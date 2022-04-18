@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _unitDB: {fileID: 11400000, guid: fbed6172f65057d4eaa5ba892636ad97, type: 2}
   unitPrefab: {fileID: 5181547669956255135, guid: a0ea4792252434243b6251fd4709e134, type: 3}
-  playerMoney: 10
+  playerMoney: 40
   unitsRoot: {fileID: 6995610197594464466}
 --- !u!1 &6995610198211243345
 GameObject:
