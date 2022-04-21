@@ -10,6 +10,8 @@ public class UnitController : MonoBehaviour
     [SerializeField] private UnitSight sight;
     [SerializeField] private Health health;
     [SerializeField] private UnitEnum unitId;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private float transparentValue;
     public UnitEnum UnitId => unitId;
 
     private UnitsCamp camp;
@@ -25,6 +27,16 @@ public class UnitController : MonoBehaviour
     public void Init(UnitsCamp unitCamp)
     {
         camp = unitCamp;
+    }
+
+    public void MakeTransparent()
+    {
+        spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, transparentValue);
+    }
+
+    public void RemoveTransparency()
+    {
+        spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 1);
     }
 
 
