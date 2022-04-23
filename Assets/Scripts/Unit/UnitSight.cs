@@ -21,21 +21,15 @@ public class UnitSight : MonoBehaviour
     private void Sight()
     {
         if (Time.frameCount % framesPerSight > 0 ||
-            (!unit.IsFreeWay))
+            (unit.CurrentAction == UnitActionEnum.Attacking))
         {
             return;
         }
 
-
         Collider2D enemyCollider = Physics2D.OverlapCircle(transform.position, sightRange, unit.Unit.EnemyLayer);
 
         if (enemyCollider != null)
-        {
-            if (unit.IsFreeWay)
-            {
-                unit.MoveTo(enemyCollider.transform.position, MoveTypeEnum.ToEnemy);
-            }
-        }
+            unit.MoveTo(enemyCollider.transform.position, MoveTypeEnum.ToEnemy);
     }
 
     private void OnDrawGizmosSelected()

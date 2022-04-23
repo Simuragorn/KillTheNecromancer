@@ -27,7 +27,7 @@ public class UnitAttackZone : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (unit.CurrentState != UnitStateEnum.Attacking)
+        if (unit.CurrentAction != UnitActionEnum.Attacking)
         {
             int targetLayer = 1 << collision.gameObject.layer;
             if (targetLayer == unit.Unit.EnemyLayer)

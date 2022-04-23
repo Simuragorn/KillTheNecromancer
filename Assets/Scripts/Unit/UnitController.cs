@@ -1,4 +1,5 @@
 using Assets.Scripts.Constants;
+using System.Collections;
 using UnityEngine;
 
 public class UnitController : MonoBehaviour
@@ -12,21 +13,62 @@ public class UnitController : MonoBehaviour
     [SerializeField] private UnitEnum unitId;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float transparentValue;
+    [SerializeField] private float chasingDelayInSeconds;
+    public bool IsChasing { private set; get; }
     public UnitEnum UnitId => unitId;
 
     private UnitsCamp camp;
 
     public Unit Unit { private set; get; }
 
-    public UnitStateEnum CurrentState { get; private set; }
-    public bool IsFreeWay => CurrentState != UnitStateEnum.Chasing &&
-            CurrentState != UnitStateEnum.Attacking;
+    public UnitActionEnum CurrentAction { get; private set; }
+    public UnitOrderEnum CurrentOrder { get; private set; }
+    public bool IsFreeWay => CurrentAction != UnitActionEnum.Chasing &&
+            CurrentAction != UnitActionEnum.Attacking;
 
-    public bool IsPositionFreezed => CurrentState == UnitStateEnum.Attacking;
+    public bool IsPositionFreezed => CurrentAction == UnitActionEnum.Attacking;
 
     public void Init(UnitsCamp unitCamp)
     {
         camp = unitCamp;
+        OnSpawning();
+
+        if (camp != null)
+        {
+            OnSpawned();
+        }
+    }
+
+    private void OnSpawning()
+    {
+        unitMove.enabled = false;
+        attackZone.enabled = false;
+        sight.enabled = false;
+    }
+
+    public void OnSpawned()
+    {
+        CurrentAction = UnitActionEnum.Idle;
+        unitMove.enabled = true;
+        attackZone.enabled = true;
+        sight.enabled = true;
+    }
+
+    public void ChangeOrder(UnitOrderEnum order)
+    {
+        CurrentOrder = order;
+        switch (CurrentOrder)
+        {
+            case UnitOrderEnum.Attack:
+                sight.enabled = true;
+                break;
+            case UnitOrderEnum.Defense:
+                sight.enabled = false;
+                CurrentAction = UnitActionEnum.Idle;
+                break;
+            default:
+                break;
+        }
     }
 
     public void MakeTransparent()
@@ -72,7 +114,7 @@ public class UnitController : MonoBehaviour
         }
         else
         {
-            CurrentState = UnitStateEnum.Moving;
+            CurrentAction = UnitActionEnum.Moving;
             targetPosition -= (Vector2)unitPosition.transform.localPosition;
             unitMove.MoveTo(targetPosition);
         }
@@ -80,7 +122,7 @@ public class UnitController : MonoBehaviour
 
     public void StartAttack()
     {
-        CurrentState = UnitStateEnum.Attacking;
+        CurrentAction = UnitActionEnum.Attacking;
         animator.SetTrigger("StartAttack");
     }
 
@@ -98,7 +140,7 @@ public class UnitController : MonoBehaviour
 
     public void ResetState()
     {
-        CurrentState = UnitStateEnum.Idle;
+        CurrentAction = UnitActionEnum.Idle;
     }
 
     private void Death()
@@ -108,17 +150,24 @@ public class UnitController : MonoBehaviour
 
     private void ChaseEnemy(Vector2 targetPosition)
     {
-        if (CurrentState == UnitStateEnum.Chasing)
-        {
+        if (IsChasing || CurrentAction == UnitActionEnum.Attacking)
             return;
-        }
-        CurrentState = UnitStateEnum.Chasing;
+
+        CurrentAction = UnitActionEnum.Chasing;
         unitMove.MoveTo(targetPosition);
 
         if (camp != null)
         {
             camp.EnemyUnitSpotted(targetPosition);
         }
+        StartCoroutine(StartChasingDelay());
+    }
+
+    private IEnumerator StartChasingDelay()
+    {
+        IsChasing = true;
+        yield return new WaitForSeconds(chasingDelayInSeconds);
+        IsChasing = false;
     }
 
     private void OnDestroy()

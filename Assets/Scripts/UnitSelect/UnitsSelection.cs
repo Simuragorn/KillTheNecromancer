@@ -1,6 +1,8 @@
 using Assets.Scripts.Constants;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UnitsSelection : MonoBehaviour
@@ -10,11 +12,19 @@ public class UnitsSelection : MonoBehaviour
 
     public static UnitsSelection Instance { get; private set; }
     public bool DragSelection { get; set; }
+    public Action<UnitOrderEnum?> OnOrderChanged;
+    public Action<UnitFormationEnum> OnFormationChanged;
+    public UnitFormationEnum CurrentFormation;
     private void Awake()
     {
         Instance = this;
         AllGameObjectUnits = new Dictionary<GameObject, SelectableUnit>();
         selectedUnits = new List<SelectableUnit>();
+    }
+
+    private void Start()
+    {
+        ChangeFormation(CurrentFormation);
     }
 
     public void ClickSelect(GameObject gameObject)
@@ -24,6 +34,7 @@ public class UnitsSelection : MonoBehaviour
         {
             selectedUnits.Add(unit);
             unit.SelectOrDeselect(true);
+            OnOrderChanged(unit.Unit.CurrentOrder);
         }
     }
     public void ShiftClickSelect(GameObject gameObject)
@@ -41,6 +52,7 @@ public class UnitsSelection : MonoBehaviour
             }
             unit.SelectOrDeselect(isAdd);
         }
+        SetSameOrderToAll();
     }
     public void DragClickSelect(GameObject gameObject)
     {
@@ -52,16 +64,18 @@ public class UnitsSelection : MonoBehaviour
                 unit.SelectOrDeselect(true);
             }
         }
+        SetSameOrderToAll();
     }
     public void DeselectAll()
     {
         selectedUnits.ForEach(u => u.SelectOrDeselect(false));
         selectedUnits.Clear();
+        OnOrderChanged(null);
     }
 
     public void MoveToPosition(Vector2 targetPosition)
     {
-        List<Vector3> positions = GetPositionsListAround(targetPosition, new float[] { 1f, 2f, 3f }, new int[] { 5, 10, 20 });
+        List<Vector3> positions = Assets.Scripts.UnitSelect.UnitFormationHelper.GetFormationPositions(CurrentFormation, targetPosition, selectedUnits.Count);
         for (int i = 0; i < selectedUnits.Count; ++i)
         {
             SelectableUnit selectedUnit = selectedUnits[i];
@@ -69,32 +83,46 @@ public class UnitsSelection : MonoBehaviour
         }
     }
 
-    private List<Vector3> GetPositionsListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
+    public void ChangeOrder(UnitOrderEnum unitOrder)
     {
-        var positionsList = new List<Vector3>();
-        positionsList.Add(startPosition);
-        for (int i = 0; i < ringDistanceArray.Length; ++i)
-        {
-            positionsList.AddRange(GetPositionsListAround(startPosition, ringDistanceArray[i], ringPositionCountArray[i]));
-        }
-        return positionsList;
+        if (selectedUnits == null)
+            return;
+
+        selectedUnits.ForEach(u => u.Unit.ChangeOrder(unitOrder));
+        if (OnOrderChanged != null)
+            OnOrderChanged(unitOrder);
     }
 
-    private List<Vector3> GetPositionsListAround(Vector3 startPosition, float distance, int positionsCount)
+    public void ChangeFormation(UnitFormationEnum unitFormation)
     {
-        var positionsList = new List<Vector3>();
-        for (int i = 0; i < positionsCount; ++i)
-        {
-            float angle = i * (360 / positionsCount);
-            Vector3 direction = ApplyRotationToVector(new Vector3(1, 0), angle);
-            Vector3 position = startPosition + direction * distance;
-            positionsList.Add(position);
-        }
-        return positionsList;
+        CurrentFormation = unitFormation;
+        if (OnFormationChanged != null)
+            OnFormationChanged(unitFormation);
     }
 
-    private Vector3 ApplyRotationToVector(Vector3 vector, float angle)
+    public void SetSameOrderToAll()
     {
-        return Quaternion.Euler(0, 0, angle) * vector;
+        if (selectedUnits == null)
+            return;
+
+        UnitOrderEnum popularOrder = GetMajorityOrder();
+        ChangeOrder(popularOrder);
+    }
+
+    private UnitOrderEnum GetMajorityOrder()
+    {
+        var order = UnitOrderEnum.Attack;
+        if (selectedUnits == null)
+            return order;
+
+        var ordersQuantity = new Dictionary<UnitOrderEnum, int>();
+        selectedUnits.ForEach(u =>
+        {
+            if (ordersQuantity.ContainsKey(u.Unit.CurrentOrder))
+                ordersQuantity[u.Unit.CurrentOrder]++;
+            else
+                ordersQuantity.Add(u.Unit.CurrentOrder, 1);
+        });
+        return order;
     }
 }

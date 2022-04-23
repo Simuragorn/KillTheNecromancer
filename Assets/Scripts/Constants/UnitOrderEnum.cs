@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Constants
 {
-    public enum UnitStateEnum
+    public enum UnitOrderEnum
     {
-        Idle,
-        Moving,
-        Chasing,
-        Attacking
+        Attack,
+        Defense
     }
 }

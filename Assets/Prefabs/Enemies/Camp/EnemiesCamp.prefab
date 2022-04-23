@@ -562,6 +562,8 @@ MonoBehaviour:
   maxXSpawn: 5
   minYSpawn: -5
   maxYSpawn: 5
+  destroyReward: 50
+  allMoveToOrderDelayInSeconds: 5
 --- !u!212 &3577447390023091015
 SpriteRenderer:
   m_ObjectHideFlags: 0

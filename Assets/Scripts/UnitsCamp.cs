@@ -12,14 +12,19 @@ public class UnitsCamp : MonoBehaviour
     [SerializeField] private int maxXSpawn;
     [SerializeField] private int minYSpawn;
     [SerializeField] private int maxYSpawn;
+    [SerializeField] private int destroyReward;
+    [SerializeField] private float allMoveToOrderDelayInSeconds;
+    public int DestroyReward => destroyReward;
 
     private bool isEnemy => !UnitEnumExtensions.IsPlayerUnit((UnitEnum)unitPrefab.Unit.Id);
+    private bool isAllMoveOrderBusy;
 
     public List<UnitController> Units { private set; get; }
 
     public void EnemyUnitSpotted(Vector2 targetPosition)
     {
-        AllMoveTo(targetPosition, MoveTypeEnum.ToEnemy);
+        if (!isAllMoveOrderBusy)
+            AllMoveTo(targetPosition, MoveTypeEnum.ToEnemy);
     }
 
     public void RemoveUnit(UnitController unit)
@@ -27,7 +32,7 @@ public class UnitsCamp : MonoBehaviour
         if (Units.Contains(unit))
         {
             Units.Remove(unit);
-            if(Units.Count == 0)
+            if (Units.Count == 0)
             {
                 Destroy(this);
             }
@@ -59,13 +64,19 @@ public class UnitsCamp : MonoBehaviour
     }
     private void AllMoveTo(Vector2 targetPosition, MoveTypeEnum moveType)
     {
+        StartCoroutine(StartAllMoveToOrderDelay());
         Units.ForEach(u =>
         {
-            if (u.IsFreeWay)
-            {
+            if (u.CurrentAction != UnitActionEnum.Attacking)
                 u.MoveTo(targetPosition, moveType);
-            }
         });
+    }
+
+    private IEnumerator StartAllMoveToOrderDelay()
+    {
+        isAllMoveOrderBusy = true;
+        yield return new WaitForSeconds(allMoveToOrderDelayInSeconds);
+        isAllMoveOrderBusy = false;
     }
 
     private void OnDestroy()

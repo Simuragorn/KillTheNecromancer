@@ -2,6 +2,7 @@ using Assets.Scripts.Constants;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,13 +10,22 @@ public class PlayerUnitsManager : MonoBehaviour
 {
     public static PlayerUnitsManager Instance { private set; get; }
     public Dictionary<GameObject, UnitController> PlayerUnits { private set; get; }
+    public int PlayerMoney
+    {
+        get { return _playerMoney; }
+        set
+        {
+            _playerMoney = value;
+            UpdateMoneyText();
+        }
+    }
     [SerializeField] private UnitDB _unitDB;
     [SerializeField] private UnitController unitPrefab;
-    [SerializeField] private int playerMoney;
+    [SerializeField] private int _playerMoney;
     [SerializeField] GameObject unitsRoot;
     private Camera camera;
     private Unit unit;
-    [SerializeField] private Text moneyText;
+    [SerializeField] private TextMeshProUGUI moneyText;
 
     public Unit GetUnitById(UnitEnum unitId)
     {
@@ -28,11 +38,17 @@ public class PlayerUnitsManager : MonoBehaviour
         {
             PlayerUnits.Remove(unitForRemove);
         }
-        if (!PlayerUnits.Any() && playerMoney < unit.Cost)
+        if (!PlayerUnits.Any() && PlayerMoney < unit.Cost)
         {
             GameManager.Instance.Defeat();
         }
     }
+
+    public void GetReward(int reward)
+    {
+        PlayerMoney += reward;
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -57,20 +73,19 @@ public class PlayerUnitsManager : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetMouseButtonDown(0))
         {
-            if (playerMoney >= unit.Cost)
+            if (PlayerMoney >= unit.Cost)
             {
                 Vector2 spawnPosition = camera.ScreenToWorldPoint(Input.mousePosition);
                 SpawnUnit(spawnPosition);
 
-                playerMoney -= unit.Cost;
-                UpdateMoneyText();
+                PlayerMoney -= unit.Cost;
             }
         }
     }
 
     private void UpdateMoneyText()
     {
-        moneyText.text = $"{playerMoney} coins";
+        moneyText.text = $"{_playerMoney}";
     }
 
     private void SpawnUnit(Vector2 spawnPosition)

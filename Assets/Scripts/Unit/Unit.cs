@@ -13,6 +13,9 @@ public class Unit
     [SerializeField] private int cost;
     public int Cost => cost;
     [SerializeField] private int damage;
+
+    [SerializeField] private int reward;
+    public int Reward => reward;
     public int Damage => damage;
     [SerializeField] private float speed;
     public float Speed => speed;

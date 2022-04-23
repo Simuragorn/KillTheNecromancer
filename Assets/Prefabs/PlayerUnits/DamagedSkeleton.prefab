@@ -282,7 +282,7 @@ MonoBehaviour:
   gameObjectForFlip: {fileID: 6837075293236848610}
   unit: {fileID: 5181547669956255135}
   seeker: {fileID: 926962119}
-  nextPathPartDistance: 0.1
+  nextPathPartDistance: 1
 --- !u!114 &5855582790932015764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,6 +316,7 @@ MonoBehaviour:
   unitId: 1
   spriteRenderer: {fileID: 6837075293236848620}
   transparentValue: 0.5
+  chasingDelayInSeconds: 1
 --- !u!61 &8409847960599893116
 BoxCollider2D:
   m_ObjectHideFlags: 0

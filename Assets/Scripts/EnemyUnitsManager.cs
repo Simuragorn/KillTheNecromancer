@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,8 @@ public class EnemyUnitsManager : MonoBehaviour
     public Dictionary<GameObject, UnitController> Enemies { get; set; }
     public List<UnitsCamp> EnemiesCamps { get; set; }
 
-    [SerializeField] private Text enemiesCampsLeftText;
-    [SerializeField] private Text enemiesLeftText;
+    [SerializeField] private TextMeshProUGUI enemiesCampsLeftText;
+    [SerializeField] private TextMeshProUGUI enemiesLeftText;
 
     private void Awake()
     {
@@ -33,6 +34,7 @@ public class EnemyUnitsManager : MonoBehaviour
         }
         EnemiesCamps.Remove(camp);
         UpdateCampText();
+        PlayerUnitsManager.Instance.GetReward(camp.DestroyReward);
     }
     public void AddCamp(UnitsCamp camp)
     {
@@ -50,6 +52,7 @@ public class EnemyUnitsManager : MonoBehaviour
             EnemiesCamps.ForEach(c => c.RemoveUnit(controller));
             UpdateEnemiesText();
             CheckVictory();
+            PlayerUnitsManager.Instance.GetReward(controller.Unit.Reward);
         }
     }
     public void AddUnit(UnitController unit)
