@@ -25,7 +25,7 @@ public class SelectableUnit : MonoBehaviour
         selectedImage.enabled = _isSelected;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (UnitsSelection.Instance.AllGameObjectUnits.ContainsKey(gameObject))
         {

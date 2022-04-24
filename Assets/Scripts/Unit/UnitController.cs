@@ -14,10 +14,13 @@ public class UnitController : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float transparentValue;
     [SerializeField] private float chasingDelayInSeconds;
+
     public bool IsChasing { private set; get; }
     public UnitEnum UnitId => unitId;
 
     private UnitsCamp camp;
+
+    private bool _isMoveDisabled;
 
     public Unit Unit { private set; get; }
 
@@ -26,7 +29,8 @@ public class UnitController : MonoBehaviour
     public bool IsFreeWay => CurrentAction != UnitActionEnum.Chasing &&
             CurrentAction != UnitActionEnum.Attacking;
 
-    public bool IsPositionFreezed => CurrentAction == UnitActionEnum.Attacking;
+    public bool IsMoveDisabled =>
+        CurrentAction == UnitActionEnum.Attacking || _isMoveDisabled;
 
     public void Init(UnitsCamp unitCamp)
     {
@@ -94,7 +98,7 @@ public class UnitController : MonoBehaviour
         {
             EnemyUnitsManager.Instance.AddUnit(this);
         }
-        health.OnDeath += Death;
+        health.OnDeath += StartDeath;
 
         attackZone.Init(this);
         health.Init(Unit.Health);
@@ -143,9 +147,36 @@ public class UnitController : MonoBehaviour
         CurrentAction = UnitActionEnum.Idle;
     }
 
-    private void Death()
+    public void DisableMove()
     {
-        Destroy(gameObject);
+        _isMoveDisabled = true;
+    }
+
+    public void EnableMove()
+    {
+        _isMoveDisabled = false;
+    }
+
+    private void StartDeath()
+    {
+        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)Unit.Id))
+        {
+            PlayerUnitsManager.Instance.RemoveUnit(gameObject);
+        }
+        else
+        {
+            EnemyUnitsManager.Instance.RemoveUnit(gameObject);
+        }
+
+
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(false);
+
+        var scripts = gameObject.GetComponents<MonoBehaviour>();
+        foreach (var script in scripts)
+            script.enabled = false;
+
+        animator.SetTrigger("Death");
     }
 
     private void ChaseEnemy(Vector2 targetPosition)
@@ -168,17 +199,5 @@ public class UnitController : MonoBehaviour
         IsChasing = true;
         yield return new WaitForSeconds(chasingDelayInSeconds);
         IsChasing = false;
-    }
-
-    private void OnDestroy()
-    {
-        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)Unit.Id))
-        {
-            PlayerUnitsManager.Instance.RemoveUnit(gameObject);
-        }
-        else
-        {
-            EnemyUnitsManager.Instance.RemoveUnit(gameObject);
-        }
     }
 }

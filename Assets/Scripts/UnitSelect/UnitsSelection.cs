@@ -88,6 +88,12 @@ public class UnitsSelection : MonoBehaviour
         if (selectedUnits == null)
             return;
 
+        if (unitOrder == UnitOrderEnum.DistantAttack)
+        {
+            if (!selectedUnits.Any(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant))
+                return;
+        }
+
         selectedUnits.ForEach(u => u.Unit.ChangeOrder(unitOrder));
         if (OnOrderChanged != null)
             OnOrderChanged(unitOrder);

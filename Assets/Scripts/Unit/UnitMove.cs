@@ -1,4 +1,3 @@
-using Pathfinding;
 using UnityEngine;
 
 public class UnitMove : MonoBehaviour
@@ -9,12 +8,8 @@ public class UnitMove : MonoBehaviour
     [SerializeField] private GameObject gameObjectForFlip;
     [SerializeField] UnitController unit;
 
-    //[SerializeField] private Seeker seeker;
     [SerializeField] private float nextPathPartDistance;
 
-
-    //private Path currentPath;
-    //private int pathPartIndex = 0;
     private bool pathEnded = true;
 
     public bool IsFlipped { private set; get; }
@@ -23,7 +18,6 @@ public class UnitMove : MonoBehaviour
     {
         targetPosition = target;
         pathEnded = false;
-        //seeker.StartPath(transform.position, targetPosition, OnPathBuilded);
     }
 
     private void Flip()
@@ -45,26 +39,13 @@ public class UnitMove : MonoBehaviour
         }
     }
 
-    //private void OnPathBuilded(Path path)
-    //{
-    //    if (!path.error)
-    //    {
-    //        pathEnded = false;
-    //        currentPath = path;
-    //        pathPartIndex = 0;
-    //    }
-    //}
-
     private void FixedUpdate()
     {
-        //UpdatePath();
-        if (pathEnded || unit.IsPositionFreezed)
+        if (pathEnded || unit.IsMoveDisabled)
         {
             animator.SetFloat("xMove", 0);
             return;
         }
-
-        //targetPosition = currentPath.vectorPath[pathPartIndex];
 
         float xDirection = targetPosition.x - transform.position.x;
         CheckFlip(xDirection);
@@ -72,20 +53,6 @@ public class UnitMove : MonoBehaviour
             Vector2.Distance(transform.position, targetPosition) <= nextPathPartDistance);
         Move();
     }
-
-    //private void UpdatePath()
-    //{
-    //    float distance = Vector2.Distance(transform.position, targetPosition);
-    //    if (distance <= nextPathPartDistance)
-    //    {
-    //        pathPartIndex++;
-    //    }
-
-    //    if (currentPath == null || pathPartIndex >= currentPath.vectorPath.Count)
-    //    {
-    //        pathEnded = true;
-    //    }
-    //}
 
     private void Move()
     {

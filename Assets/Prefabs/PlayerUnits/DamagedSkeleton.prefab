@@ -168,7 +168,6 @@ GameObject:
   - component: {fileID: 5855582790932015764}
   - component: {fileID: 5181547669956255135}
   - component: {fileID: 8409847960599893116}
-  - component: {fileID: 926962119}
   - component: {fileID: 8850688866072502048}
   - component: {fileID: 926962113}
   - component: {fileID: 926455673}
@@ -256,7 +255,7 @@ Animator:
   m_GameObject: {fileID: 6837075293236848610}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d6643a4f5fb696e4fab87bc7b944a722, type: 2}
+  m_Controller: {fileID: 22100000, guid: 1e54e655ee8cc5041817a5f2d9607478, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -281,7 +280,6 @@ MonoBehaviour:
   animator: {fileID: 6837075293236848611}
   gameObjectForFlip: {fileID: 6837075293236848610}
   unit: {fileID: 5181547669956255135}
-  seeker: {fileID: 926962119}
   nextPathPartDistance: 1
 --- !u!114 &5855582790932015764
 MonoBehaviour:
@@ -343,34 +341,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.43196273, y: 1.9750252}
   m_EdgeRadius: 0
---- !u!114 &926962119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6837075293236848610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
 --- !u!114 &8850688866072502048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,6 +353,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8396c2da592dad24eb9837f16e7485bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 6837075293236848611}
+  collider: {fileID: 8409847960599893116}
 --- !u!114 &926962113
 MonoBehaviour:
   m_ObjectHideFlags: 0

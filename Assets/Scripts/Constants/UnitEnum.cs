@@ -10,6 +10,7 @@ namespace Assets.Scripts.Constants
     {
         //Player
         DamagedSkeleton = 1,
+        DarkArcher = 2,
 
         //Enemies
         Knight = 10,

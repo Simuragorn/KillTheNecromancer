@@ -9,6 +9,7 @@ namespace Assets.Scripts.Constants
     public enum UnitOrderEnum
     {
         Attack,
-        Defense
+        Defense,
+        DistantAttack
     }
 }
