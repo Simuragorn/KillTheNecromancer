@@ -49,3 +49,6 @@ MonoBehaviour:
   _allyLayer:
     serializedVersion: 2
     m_Bits: 1024
+  victoryPanel: {fileID: 0}
+  defeatPanel: {fileID: 0}
+  _unitDB: {fileID: 11400000, guid: fbed6172f65057d4eaa5ba892636ad97, type: 2}

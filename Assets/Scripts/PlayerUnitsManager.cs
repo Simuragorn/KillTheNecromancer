@@ -19,18 +19,12 @@ public class PlayerUnitsManager : MonoBehaviour
             UpdateMoneyText();
         }
     }
-    [SerializeField] private UnitDB _unitDB;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private int _playerMoney;
     [SerializeField] GameObject unitsRoot;
     private Camera camera;
     private Unit unit;
     [SerializeField] private TextMeshProUGUI moneyText;
-
-    public Unit GetUnitById(UnitEnum unitId)
-    {
-        return _unitDB.GetUnitById((int)unitId);
-    }
 
     public void RemoveUnit(GameObject unitForRemove)
     {
@@ -59,8 +53,12 @@ public class PlayerUnitsManager : MonoBehaviour
         Instance = this;
         camera = Camera.main;
         PlayerUnits = new Dictionary<GameObject, UnitController>();
-        unit = GetUnitById(unitPrefab.UnitId);
         UpdateMoneyText();
+    }
+
+    private void Start()
+    {
+        unit = GameManager.Instance.GetUnitById(unitPrefab.UnitId);
     }
 
 

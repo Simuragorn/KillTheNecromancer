@@ -1,3 +1,4 @@
+using Assets.Scripts.Constants;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject victoryPanel;
     [SerializeField] private GameObject defeatPanel;
+    [SerializeField] private UnitDB _unitDB;
 
     public LayerMask EnemyLayer => _enemyLayer;
     public LayerMask AllyLayer => _allyLayer;
@@ -24,6 +26,11 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
+    }
+
+    public Unit GetUnitById(UnitEnum unitId)
+    {
+        return _unitDB.GetUnitById((int)unitId);
     }
 
     public void Victory()

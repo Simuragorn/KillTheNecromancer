@@ -52,7 +52,7 @@ public class UnitAttackZone : MonoBehaviour
     private void TryGetTarget(GameObject enemy)
     {
         UnitController enemyUnit;
-        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)unit.Unit.Id))
+        if (unit.IsPlayerUnit)
         {
             EnemyUnitsManager.Instance.Enemies.TryGetValue(enemy, out enemyUnit);
         }

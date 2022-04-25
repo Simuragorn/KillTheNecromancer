@@ -16,7 +16,7 @@ public class UnitsCamp : MonoBehaviour
     [SerializeField] private float allMoveToOrderDelayInSeconds;
     public int DestroyReward => destroyReward;
 
-    private bool isEnemy => !UnitEnumExtensions.IsPlayerUnit((UnitEnum)unitPrefab.Unit.Id);
+    private bool isEnemy => !unitPrefab.IsPlayerUnit;
     private bool isAllMoveOrderBusy;
 
     public List<UnitController> Units { private set; get; }

@@ -37,4 +37,6 @@ public class Unit
     public float SightRange => sightRange;
     [SerializeField] private float distantRange;
     public float DistantRange => distantRange;
+    [SerializeField] private float distantSpotOffset;
+    public float DistantSpotOffset => distantSpotOffset;
 }

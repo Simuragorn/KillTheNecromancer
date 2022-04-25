@@ -4,15 +4,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitsSelection : MonoBehaviour
 {
+    [SerializeField] private DistantTarget distantTargetVFX;
     public Dictionary<GameObject, SelectableUnit> AllGameObjectUnits;
     public List<SelectableUnit> selectedUnits { private set; get; } = new List<SelectableUnit>();
 
     public static UnitsSelection Instance { get; private set; }
     public bool DragSelection { get; set; }
     public Action<UnitOrderEnum?> OnOrderChanged;
+    public UnitOrderEnum CurrentOrder;
     public Action<UnitFormationEnum> OnFormationChanged;
     public UnitFormationEnum CurrentFormation;
     private void Awake()
@@ -20,6 +23,7 @@ public class UnitsSelection : MonoBehaviour
         Instance = this;
         AllGameObjectUnits = new Dictionary<GameObject, SelectableUnit>();
         selectedUnits = new List<SelectableUnit>();
+        distantTargetVFX.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -75,6 +79,17 @@ public class UnitsSelection : MonoBehaviour
 
     public void MoveToPosition(Vector2 targetPosition)
     {
+        if (CurrentOrder == UnitOrderEnum.DistantAttack)
+        {
+            if (distantTargetVFX.IsCursor)
+            {
+                distantTargetVFX.Hide();
+                selectedUnits.ForEach(u => u.Unit.SetDistantTarget(targetPosition));
+            }
+            else
+                distantTargetVFX.MoveWithCursor(GetMaxDistantOffset());
+            return;
+        }
         List<Vector3> positions = Assets.Scripts.UnitSelect.UnitFormationHelper.GetFormationPositions(CurrentFormation, targetPosition, selectedUnits.Count);
         for (int i = 0; i < selectedUnits.Count; ++i)
         {
@@ -83,18 +98,23 @@ public class UnitsSelection : MonoBehaviour
         }
     }
 
-    public void ChangeOrder(UnitOrderEnum unitOrder)
+    public void ChangeOrder(UnitOrderEnum unitOrder, bool viaShortcut)
     {
         if (selectedUnits == null)
             return;
+
+        distantTargetVFX.Hide();
 
         if (unitOrder == UnitOrderEnum.DistantAttack)
         {
             if (!selectedUnits.Any(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant))
                 return;
+            if (viaShortcut)
+                distantTargetVFX.MoveWithCursor(GetMaxDistantOffset());
         }
 
         selectedUnits.ForEach(u => u.Unit.ChangeOrder(unitOrder));
+        CurrentOrder = unitOrder;
         if (OnOrderChanged != null)
             OnOrderChanged(unitOrder);
     }
@@ -112,7 +132,14 @@ public class UnitsSelection : MonoBehaviour
             return;
 
         UnitOrderEnum popularOrder = GetMajorityOrder();
-        ChangeOrder(popularOrder);
+        ChangeOrder(popularOrder, false);
+    }
+
+    private float GetMaxDistantOffset()
+    {
+        if (selectedUnits == null)
+            return 0;
+        return selectedUnits.Max(u => u.Unit.Unit.DistantSpotOffset);
     }
 
     private UnitOrderEnum GetMajorityOrder()

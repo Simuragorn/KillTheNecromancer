@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UnitClick : MonoBehaviour
 {
-    [SerializeField] private LayerMask clickable;
-    [SerializeField] private LayerMask ground;
+    [SerializeField] private LayerMask unitMask;
     private Camera camera;
     void Start()
     {
@@ -28,7 +28,7 @@ public class UnitClick : MonoBehaviour
     private void SelectUnitOrMove()
     {
         Vector2 targetPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-        List<Collider2D> colliders = Physics2D.OverlapPointAll(targetPosition, clickable).ToList();
+        List<Collider2D> colliders = Physics2D.OverlapPointAll(targetPosition, unitMask).ToList();
         var collider = colliders.FirstOrDefault();
         if (collider != null)
         {
@@ -41,9 +41,10 @@ public class UnitClick : MonoBehaviour
                 UnitsSelection.Instance.ClickSelect(collider.gameObject);
             }
         }
-        else if (!UnitsSelection.Instance.DragSelection)
+        else if (!UnitsSelection.Instance.DragSelection && 
+            !EventSystem.current.IsPointerOverGameObject())
         {
-            UnitsSelection.Instance.MoveToPosition(targetPosition);
+                UnitsSelection.Instance.MoveToPosition(targetPosition);
         }
     }
 }

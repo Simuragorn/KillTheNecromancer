@@ -22,12 +22,17 @@ public class OrderButton : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(activationButton) && UnitsSelection.Instance.selectedUnits != null && UnitsSelection.Instance.selectedUnits.Any())
-            ChangeOrder();
+            ChangeOrderByShortcut();
+    }
+
+    private void ChangeOrderByShortcut()
+    {
+        UnitsSelection.Instance.ChangeOrder(order, true);
     }
 
     private void ChangeOrder()
     {
-        UnitsSelection.Instance.ChangeOrder(order);
+        UnitsSelection.Instance.ChangeOrder(order, false);
     }
 
     private void OnOrderChanged(UnitOrderEnum? currentOrder)

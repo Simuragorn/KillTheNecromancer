@@ -15,6 +15,10 @@ public class UnitController : MonoBehaviour
     [SerializeField] private float transparentValue;
     [SerializeField] private float chasingDelayInSeconds;
 
+    private int _layer;
+
+    public DistantTarget distantTargetMarker;
+
     public bool IsChasing { private set; get; }
     public UnitEnum UnitId => unitId;
 
@@ -75,6 +79,14 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void SetDistantTarget(Vector2 targetPosition)
+    {
+        if (Unit.UnitType == UnitTypeEnum.Distant)
+        {
+            distantTargetMarker.SetPosition(Unit.DistantSpotOffset, targetPosition);
+        }
+    }
+
     public void MakeTransparent()
     {
         spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, transparentValue);
@@ -88,9 +100,9 @@ public class UnitController : MonoBehaviour
 
     private void Start()
     {
-        Unit = PlayerUnitsManager.Instance.GetUnitById(UnitId);
-        int currentLayer = 1 << gameObject.layer;
-        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)UnitId))
+        Unit = GameManager.Instance.GetUnitById(UnitId);
+        _layer = 1 << gameObject.layer;
+        if (IsPlayerUnit)
         {
             PlayerUnitsManager.Instance.PlayerUnits.Add(gameObject, this);
         }
@@ -103,6 +115,9 @@ public class UnitController : MonoBehaviour
         attackZone.Init(this);
         health.Init(Unit.Health);
         sight.Init(this);
+
+        if (Unit.UnitType == UnitTypeEnum.Distant)
+            distantTargetMarker.Hide();
     }
 
     public void GetDamage(int damage)
@@ -110,8 +125,13 @@ public class UnitController : MonoBehaviour
         health.GetDamage(damage);
     }
 
+    public bool IsPlayerUnit => _layer == GameManager.Instance.AllyLayer.value;
+
     public void MoveTo(Vector2 targetPosition, MoveTypeEnum moveType)
     {
+        if (Unit.UnitType == UnitTypeEnum.Distant)
+            distantTargetMarker.Hide();
+
         if (moveType == MoveTypeEnum.ToEnemy)
         {
             ChaseEnemy(targetPosition);
@@ -159,7 +179,7 @@ public class UnitController : MonoBehaviour
 
     private void StartDeath()
     {
-        if (UnitEnumExtensions.IsPlayerUnit((UnitEnum)Unit.Id))
+        if (IsPlayerUnit)
         {
             PlayerUnitsManager.Instance.RemoveUnit(gameObject);
         }

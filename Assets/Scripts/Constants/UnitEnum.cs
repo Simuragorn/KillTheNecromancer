@@ -15,12 +15,4 @@ namespace Assets.Scripts.Constants
         //Enemies
         Knight = 10,
     }
-
-    public static class UnitEnumExtensions
-    {
-        public static bool IsPlayerUnit(this UnitEnum unitEnum)
-        {
-            return unitEnum == UnitEnum.DamagedSkeleton;
-        }
-    }
 }

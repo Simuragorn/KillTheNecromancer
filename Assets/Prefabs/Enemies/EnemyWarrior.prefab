@@ -127,7 +127,7 @@ MonoBehaviour:
   animator: {fileID: 4414717250261165960}
   gameObjectForFlip: {fileID: 4414717250261165961}
   unit: {fileID: 2616200046619565556}
-  nextPathPartDistance: 1
+  nextPathPartDistance: 0.1
 --- !u!114 &3667381134066772735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +162,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 4414717250261165959}
   transparentValue: 0.5
   chasingDelayInSeconds: 0.2
+  distantTargetVFX: {fileID: 0}
 --- !u!61 &1662912494327944215
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -175,10 +176,10 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0337317, y: 0.912228}
+  m_Offset: {x: -0.0337317, y: -0.22}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 4, y: 2.2}
     newSize: {x: 1.28, y: 0.96}
     adaptiveTilingThreshold: 0.5
@@ -264,7 +265,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7180446669376543390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.67, z: 0}
+  m_LocalPosition: {x: 0, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4414717250261165958}
@@ -355,7 +356,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7180446669901520247}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.01, y: 0.12, z: 0}
+  m_LocalPosition: {x: -0.08, y: -0.94, z: 0}
   m_LocalScale: {x: 1.3233149, y: 0.93359864, z: 1.3233149}
   m_Children: []
   m_Father: {fileID: 4414717250261165958}
