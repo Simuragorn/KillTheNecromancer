@@ -28,6 +28,7 @@ MonoBehaviour:
     sightRange: 5
     distantRange: 0
     distantSpotOffset: 0
+    projectileSpeed: 0
   - id: 10
     unitName: Knight
     enemyLayer:
@@ -43,6 +44,7 @@ MonoBehaviour:
     sightRange: 5
     distantRange: 0
     distantSpotOffset: 0
+    projectileSpeed: 0
   - id: 2
     unitName: DarkArcher
     enemyLayer:
@@ -58,6 +60,7 @@ MonoBehaviour:
     sightRange: 0
     distantRange: 20
     distantSpotOffset: 10
+    projectileSpeed: 1
   currentUnit:
     id: 2
     unitName: DarkArcher
@@ -74,3 +77,4 @@ MonoBehaviour:
     sightRange: 0
     distantRange: 20
     distantSpotOffset: 10
+    projectileSpeed: 1

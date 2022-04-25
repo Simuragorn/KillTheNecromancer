@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class PlayerUnitsManager : MonoBehaviour
 {
     public static PlayerUnitsManager Instance { private set; get; }
-    public Dictionary<GameObject, UnitController> PlayerUnits { private set; get; }
+    public Dictionary<GameObject, BaseUnitController> PlayerUnits { private set; get; }
     public int PlayerMoney
     {
         get { return _playerMoney; }
@@ -19,7 +19,7 @@ public class PlayerUnitsManager : MonoBehaviour
             UpdateMoneyText();
         }
     }
-    [SerializeField] private UnitController unitPrefab;
+    [SerializeField] private BaseUnitController unitPrefab;
     [SerializeField] private int _playerMoney;
     [SerializeField] GameObject unitsRoot;
     private Camera camera;
@@ -52,7 +52,7 @@ public class PlayerUnitsManager : MonoBehaviour
         }
         Instance = this;
         camera = Camera.main;
-        PlayerUnits = new Dictionary<GameObject, UnitController>();
+        PlayerUnits = new Dictionary<GameObject, BaseUnitController>();
         UpdateMoneyText();
     }
 

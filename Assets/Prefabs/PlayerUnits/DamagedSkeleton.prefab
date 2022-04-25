@@ -308,14 +308,13 @@ MonoBehaviour:
   unitPosition: {fileID: 914201884}
   unitMove: {fileID: 7657833526420041873}
   animator: {fileID: 6837075293236848611}
-  attackZone: {fileID: 9006277457368191182}
   sight: {fileID: 5855582790932015764}
   health: {fileID: 8850688866072502048}
   unitId: 1
   spriteRenderer: {fileID: 6837075293236848620}
   transparentValue: 0.5
   chasingDelayInSeconds: 1
-  distantTargetVFX: {fileID: 0}
+  attackZone: {fileID: 9006277457368191182}
 --- !u!61 &8409847960599893116
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UnitAttackZone : MonoBehaviour
 {
-    private UnitController unit;
+    private BaseUnitController unit;
     [SerializeField] private BoxCollider2D boxCollider;
     private int damage;
     private float reloadInSeconds;
@@ -13,9 +13,9 @@ public class UnitAttackZone : MonoBehaviour
     public float Widht { get; private set; }
     public float Height { get; private set; }
 
-    public UnitController EnemyTarget { get; private set; }
+    public BaseUnitController EnemyTarget { get; private set; }
 
-    public void Init(UnitController unitController)
+    public void Init(BaseUnitController unitController)
     {
         unit = unitController;
         damage = unitController.Unit.Damage;
@@ -51,7 +51,7 @@ public class UnitAttackZone : MonoBehaviour
 
     private void TryGetTarget(GameObject enemy)
     {
-        UnitController enemyUnit;
+        BaseUnitController enemyUnit;
         if (unit.IsPlayerUnit)
         {
             EnemyUnitsManager.Instance.Enemies.TryGetValue(enemy, out enemyUnit);

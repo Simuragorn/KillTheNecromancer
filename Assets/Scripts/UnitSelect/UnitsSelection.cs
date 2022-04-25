@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class UnitsSelection : MonoBehaviour
 {
-    [SerializeField] private DistantTarget distantTargetVFX;
+    [SerializeField] private DistantTarget distantTarget;
     public Dictionary<GameObject, SelectableUnit> AllGameObjectUnits;
     public List<SelectableUnit> selectedUnits { private set; get; } = new List<SelectableUnit>();
 
@@ -23,7 +23,7 @@ public class UnitsSelection : MonoBehaviour
         Instance = this;
         AllGameObjectUnits = new Dictionary<GameObject, SelectableUnit>();
         selectedUnits = new List<SelectableUnit>();
-        distantTargetVFX.gameObject.SetActive(false);
+        distantTarget.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -81,15 +81,10 @@ public class UnitsSelection : MonoBehaviour
     {
         if (CurrentOrder == UnitOrderEnum.DistantAttack)
         {
-            if (distantTargetVFX.IsCursor)
-            {
-                distantTargetVFX.Hide();
-                selectedUnits.ForEach(u => u.Unit.SetDistantTarget(targetPosition));
-            }
-            else
-                distantTargetVFX.MoveWithCursor(GetMaxDistantOffset());
+            MoveForDistantAttack(targetPosition);
             return;
         }
+
         List<Vector3> positions = Assets.Scripts.UnitSelect.UnitFormationHelper.GetFormationPositions(CurrentFormation, targetPosition, selectedUnits.Count);
         for (int i = 0; i < selectedUnits.Count; ++i)
         {
@@ -98,19 +93,18 @@ public class UnitsSelection : MonoBehaviour
         }
     }
 
-    public void ChangeOrder(UnitOrderEnum unitOrder, bool viaShortcut)
+    public void ChangeOrder(UnitOrderEnum unitOrder)
     {
         if (selectedUnits == null)
             return;
 
-        distantTargetVFX.Hide();
+        distantTarget.Hide();
 
         if (unitOrder == UnitOrderEnum.DistantAttack)
         {
             if (!selectedUnits.Any(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant))
                 return;
-            if (viaShortcut)
-                distantTargetVFX.MoveWithCursor(GetMaxDistantOffset());
+            distantTarget.MoveWithCursor(GetMaxDistantOffset());
         }
 
         selectedUnits.ForEach(u => u.Unit.ChangeOrder(unitOrder));
@@ -132,7 +126,20 @@ public class UnitsSelection : MonoBehaviour
             return;
 
         UnitOrderEnum popularOrder = GetMajorityOrder();
-        ChangeOrder(popularOrder, false);
+        ChangeOrder(popularOrder);
+    }
+
+    private void MoveForDistantAttack(Vector2 targetPosition)
+    {
+        if (distantTarget.IsCursor)
+        {
+            List<BaseUnitController> distanceUnits = selectedUnits.Where(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant).Select(u => u.Unit).ToList();
+
+            distantTarget.Hide();
+            distanceUnits.ForEach(u => u.SetTarget(targetPosition));
+        }
+        else
+            distantTarget.MoveWithCursor(GetMaxDistantOffset());
     }
 
     private float GetMaxDistantOffset()

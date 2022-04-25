@@ -6,7 +6,7 @@ public class UnitMove : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject gameObjectForFlip;
-    [SerializeField] UnitController unit;
+    [SerializeField] BaseUnitController unit;
 
     [SerializeField] private float nextPathPartDistance;
 

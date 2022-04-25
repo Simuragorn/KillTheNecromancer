@@ -4,11 +4,11 @@ using UnityEngine;
 public class UnitSight : MonoBehaviour
 {
     private float sightRange;
-    private UnitController unit;
+    private BaseUnitController unit;
 
     private int framesPerSight = 4;
 
-    public void Init(UnitController controller)
+    public void Init(BaseUnitController controller)
     {
         unit = controller;
         sightRange = unit.Unit.SightRange;

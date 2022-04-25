@@ -20,6 +20,10 @@ public class Projectile : MonoBehaviour
         damage = damageValue;
 
         isLaunched = true;
+
+        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     private void FixedUpdate()
@@ -31,9 +35,6 @@ public class Projectile : MonoBehaviour
     private void Move()
     {
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
-        transform.rotation = Quaternion.LookRotation(direction);
-
 
         if (Vector2.Distance(transform.position, targetPosition) < targetMinDistance)
             Destroy(gameObject);

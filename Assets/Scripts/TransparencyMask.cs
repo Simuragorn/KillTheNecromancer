@@ -6,7 +6,7 @@ public class TransparencyMask : MonoBehaviour
 {
     private void OnTriggerStay2D(Collider2D collision)
     {
-        UnitController unit;
+        BaseUnitController unit;
         if (!EnemyUnitsManager.Instance.Enemies.TryGetValue(collision.gameObject, out unit))
         {
             PlayerUnitsManager.Instance.PlayerUnits.TryGetValue(collision.gameObject, out unit);
@@ -19,7 +19,7 @@ public class TransparencyMask : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        UnitController unit;
+        BaseUnitController unit;
         if (!EnemyUnitsManager.Instance.Enemies.TryGetValue(collision.gameObject, out unit))
         {
             PlayerUnitsManager.Instance.PlayerUnits.TryGetValue(collision.gameObject, out unit);

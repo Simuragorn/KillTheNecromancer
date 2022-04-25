@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class EnemyUnitsManager : MonoBehaviour
 {
     public static EnemyUnitsManager Instance { private set; get; }
-    public Dictionary<GameObject, UnitController> Enemies { get; set; }
+    public Dictionary<GameObject, BaseUnitController> Enemies { get; set; }
     public List<UnitsCamp> EnemiesCamps { get; set; }
 
     [SerializeField] private TextMeshProUGUI enemiesCampsLeftText;
@@ -22,7 +22,7 @@ public class EnemyUnitsManager : MonoBehaviour
             return;
         }
         Instance = this;
-        Enemies = new Dictionary<GameObject, UnitController>();
+        Enemies = new Dictionary<GameObject, BaseUnitController>();
         EnemiesCamps = new List<UnitsCamp>();
     }
 
@@ -46,7 +46,7 @@ public class EnemyUnitsManager : MonoBehaviour
     }
     public void RemoveUnit(GameObject unit)
     {
-        if (Enemies.TryGetValue(unit, out UnitController controller))
+        if (Enemies.TryGetValue(unit, out BaseUnitController controller))
         {
             Enemies.Remove(unit);
             EnemiesCamps.ForEach(c => c.RemoveUnit(controller));
@@ -55,7 +55,7 @@ public class EnemyUnitsManager : MonoBehaviour
             PlayerUnitsManager.Instance.GetReward(controller.Unit.Reward);
         }
     }
-    public void AddUnit(UnitController unit)
+    public void AddUnit(BaseUnitController unit)
     {
         if (!Enemies.ContainsValue(unit))
         {

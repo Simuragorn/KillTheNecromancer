@@ -7,7 +7,7 @@ public class UnitsCamp : MonoBehaviour
 {
     [SerializeField] private int enemiesCount;
     [SerializeField] private Transform spawnCenter;
-    [SerializeField] private UnitController unitPrefab;
+    [SerializeField] private BaseUnitController unitPrefab;
     [SerializeField] private int minXSpawn;
     [SerializeField] private int maxXSpawn;
     [SerializeField] private int minYSpawn;
@@ -19,7 +19,7 @@ public class UnitsCamp : MonoBehaviour
     private bool isEnemy => !unitPrefab.IsPlayerUnit;
     private bool isAllMoveOrderBusy;
 
-    public List<UnitController> Units { private set; get; }
+    public List<BaseUnitController> Units { private set; get; }
 
     public void EnemyUnitSpotted(Vector2 targetPosition)
     {
@@ -27,7 +27,7 @@ public class UnitsCamp : MonoBehaviour
             AllMoveTo(targetPosition, MoveTypeEnum.ToEnemy);
     }
 
-    public void RemoveUnit(UnitController unit)
+    public void RemoveUnit(BaseUnitController unit)
     {
         if (Units.Contains(unit))
         {
@@ -51,7 +51,7 @@ public class UnitsCamp : MonoBehaviour
 
     private void SpawnUnits()
     {
-        Units = new List<UnitController>();
+        Units = new List<BaseUnitController>();
         for (int i = 0; i < enemiesCount; i++)
         {
             float randomX = Random.Range(minXSpawn, maxXSpawn);

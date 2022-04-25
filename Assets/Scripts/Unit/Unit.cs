@@ -39,4 +39,6 @@ public class Unit
     public float DistantRange => distantRange;
     [SerializeField] private float distantSpotOffset;
     public float DistantSpotOffset => distantSpotOffset;
+    [SerializeField] private float projectileSpeed;
+    public float ProjectileSpeed => projectileSpeed;
 }
