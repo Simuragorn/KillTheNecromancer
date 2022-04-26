@@ -19,7 +19,7 @@ public class DistantUnitController : BaseUnitController
             StartCoroutine(StartReloading());
         }
     }
-    
+
     public override void MoveTo(Vector2 targetPosition, MoveTypeEnum moveType)
     {
         distantTargetMarker.Hide();
@@ -36,12 +36,13 @@ public class DistantUnitController : BaseUnitController
     public override void StartAttack()
     {
         base.StartAttack();
-
+        Vector2 targetPosition = distantTargetMarker.transform.position;
         float xDirection = distantTargetMarker.transform.position.x - transform.position.x;
         if (IsFlipped && xDirection > 0)
             Flip();
         else if (!IsFlipped && xDirection < 0)
             Flip();
+        distantTargetMarker.transform.position = targetPosition;
     }
     public override void Attack()
     {

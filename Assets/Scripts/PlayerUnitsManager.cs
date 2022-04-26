@@ -19,12 +19,13 @@ public class PlayerUnitsManager : MonoBehaviour
             UpdateMoneyText();
         }
     }
-    [SerializeField] private BaseUnitController unitPrefab;
+    [SerializeField] private List<BaseUnitController> unitPrefabs;
     [SerializeField] private int _playerMoney;
     [SerializeField] GameObject unitsRoot;
     private Camera camera;
     private Unit unit;
     [SerializeField] private TextMeshProUGUI moneyText;
+    private BaseUnitController selectedUnitPrefab;
 
     public void RemoveUnit(GameObject unitForRemove)
     {
@@ -43,6 +44,12 @@ public class PlayerUnitsManager : MonoBehaviour
         PlayerMoney += reward;
     }
 
+    public void OnSelectUnitForSpawn(UnitEnum selectedUnit)
+    {
+        selectedUnitPrefab = unitPrefabs.First(u => u.UnitId == selectedUnit);
+        unit = GameManager.Instance.GetUnitById(selectedUnitPrefab.UnitId);
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -54,11 +61,6 @@ public class PlayerUnitsManager : MonoBehaviour
         camera = Camera.main;
         PlayerUnits = new Dictionary<GameObject, BaseUnitController>();
         UpdateMoneyText();
-    }
-
-    private void Start()
-    {
-        unit = GameManager.Instance.GetUnitById(unitPrefab.UnitId);
     }
 
 
@@ -88,7 +90,7 @@ public class PlayerUnitsManager : MonoBehaviour
 
     private void SpawnUnit(Vector2 spawnPosition)
     {
-        var unit = Instantiate(unitPrefab, spawnPosition, Quaternion.identity, unitsRoot.transform);
+        var unit = Instantiate(selectedUnitPrefab, spawnPosition, Quaternion.identity, unitsRoot.transform);
         unit.Init(null);
     }
 }

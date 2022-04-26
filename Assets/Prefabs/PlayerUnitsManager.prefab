@@ -217,7 +217,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557b5c0a27518704cbfb59f785265e82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitPrefab: {fileID: 5181547669956255135, guid: a0ea4792252434243b6251fd4709e134, type: 3}
+  unitPrefabs:
+  - {fileID: 5181547669956255135, guid: a0ea4792252434243b6251fd4709e134, type: 3}
+  - {fileID: 8720326096446830727, guid: 123102abdaf9b5146a620837332d2a7e, type: 3}
   _playerMoney: 100
   unitsRoot: {fileID: 6995610197594464466}
   moneyText: {fileID: 0}
