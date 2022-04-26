@@ -56,11 +56,11 @@ MonoBehaviour:
     damage: 5
     speed: 4
     health: 5
-    reloadInSeconds: 1
+    reloadInSeconds: 2
     sightRange: 0
     distantRange: 20
-    distantSpotOffset: 10
-    projectileSpeed: 1
+    distantSpotOffset: 5
+    projectileSpeed: 15
   currentUnit:
     id: 2
     unitName: DarkArcher
@@ -73,8 +73,8 @@ MonoBehaviour:
     damage: 5
     speed: 4
     health: 5
-    reloadInSeconds: 1
+    reloadInSeconds: 2
     sightRange: 0
     distantRange: 20
-    distantSpotOffset: 10
-    projectileSpeed: 1
+    distantSpotOffset: 5
+    projectileSpeed: 15

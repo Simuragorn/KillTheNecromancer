@@ -33,6 +33,8 @@ public abstract class BaseUnitController : MonoBehaviour
     public bool IsMoveDisabled =>
         CurrentAction == UnitActionEnum.Attacking || _isMoveDisabled;
 
+    public bool IsFlipped { private set; get; }
+
     public void Init(UnitsCamp unitCamp)
     {
         camp = unitCamp;
@@ -42,6 +44,13 @@ public abstract class BaseUnitController : MonoBehaviour
         {
             OnSpawned();
         }
+    }
+
+    public void Flip()
+    {
+        IsFlipped = !IsFlipped;
+        float xScale = IsFlipped ? -1 : 1;
+        transform.localScale = new Vector3(xScale, transform.localScale.y, transform.localScale.z);
     }
 
     protected virtual void OnSpawning()
@@ -57,7 +66,7 @@ public abstract class BaseUnitController : MonoBehaviour
         sight.enabled = true;
     }
 
-    public void ChangeOrder(UnitOrderEnum order)
+    public virtual void ChangeOrder(UnitOrderEnum order)
     {
         CurrentOrder = order;
         switch (CurrentOrder)
@@ -115,7 +124,7 @@ public abstract class BaseUnitController : MonoBehaviour
         unitMove.MoveTo(targetPosition);
     }
 
-    public void StartAttack()
+    public virtual void StartAttack()
     {
         CurrentAction = UnitActionEnum.Attacking;
         animator.SetTrigger("StartAttack");

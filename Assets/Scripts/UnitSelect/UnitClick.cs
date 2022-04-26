@@ -22,6 +22,7 @@ public class UnitClick : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             UnitsSelection.Instance.DeselectAll();
+            UnitsSelection.Instance.HideMarkers();
         }
     }
 
@@ -41,9 +42,10 @@ public class UnitClick : MonoBehaviour
                 UnitsSelection.Instance.ClickSelect(collider.gameObject);
             }
         }
-        else if (!UnitsSelection.Instance.DragSelection && 
+        else if (!UnitsSelection.Instance.DragSelection &&
             !EventSystem.current.IsPointerOverGameObject())
         {
+            if (UnitsSelection.Instance.selectedUnits.Any())
                 UnitsSelection.Instance.MoveToPosition(targetPosition);
         }
     }

@@ -43,3 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b3bfa84fc7f61469f9a6e9dc65fbdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemiesCampsLeftText: {fileID: 0}
+  enemiesLeftText: {fileID: 0}

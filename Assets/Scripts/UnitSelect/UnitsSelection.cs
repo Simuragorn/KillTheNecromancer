@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class UnitsSelection : MonoBehaviour
 {
-    [SerializeField] private DistantTarget distantTarget;
+    [SerializeField] private DistantTarget distantTargetMarker;
     public Dictionary<GameObject, SelectableUnit> AllGameObjectUnits;
     public List<SelectableUnit> selectedUnits { private set; get; } = new List<SelectableUnit>();
 
@@ -23,7 +23,7 @@ public class UnitsSelection : MonoBehaviour
         Instance = this;
         AllGameObjectUnits = new Dictionary<GameObject, SelectableUnit>();
         selectedUnits = new List<SelectableUnit>();
-        distantTarget.gameObject.SetActive(false);
+        distantTargetMarker.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -93,18 +93,23 @@ public class UnitsSelection : MonoBehaviour
         }
     }
 
+    public void HideMarkers()
+    {
+        distantTargetMarker.gameObject.SetActive(false);
+    }
+
     public void ChangeOrder(UnitOrderEnum unitOrder)
     {
         if (selectedUnits == null)
             return;
 
-        distantTarget.Hide();
+        distantTargetMarker.Hide();
 
         if (unitOrder == UnitOrderEnum.DistantAttack)
         {
             if (!selectedUnits.Any(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant))
                 return;
-            distantTarget.MoveWithCursor(GetMaxDistantOffset());
+            distantTargetMarker.MoveWithCursor(GetMaxDistantOffset());
         }
 
         selectedUnits.ForEach(u => u.Unit.ChangeOrder(unitOrder));
@@ -131,15 +136,15 @@ public class UnitsSelection : MonoBehaviour
 
     private void MoveForDistantAttack(Vector2 targetPosition)
     {
-        if (distantTarget.IsCursor)
+        if (distantTargetMarker.IsCursor)
         {
             List<BaseUnitController> distanceUnits = selectedUnits.Where(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant).Select(u => u.Unit).ToList();
 
-            distantTarget.Hide();
+            distantTargetMarker.Hide();
             distanceUnits.ForEach(u => u.SetTarget(targetPosition));
         }
         else
-            distantTarget.MoveWithCursor(GetMaxDistantOffset());
+            distantTargetMarker.MoveWithCursor(GetMaxDistantOffset());
     }
 
     private float GetMaxDistantOffset()
@@ -152,7 +157,7 @@ public class UnitsSelection : MonoBehaviour
     private UnitOrderEnum GetMajorityOrder()
     {
         var order = UnitOrderEnum.Attack;
-        if (selectedUnits == null)
+        if (!selectedUnits.Any())
             return order;
 
         var ordersQuantity = new Dictionary<UnitOrderEnum, int>();
@@ -163,6 +168,7 @@ public class UnitsSelection : MonoBehaviour
             else
                 ordersQuantity.Add(u.Unit.CurrentOrder, 1);
         });
+        order = ordersQuantity.First(o => o.Value == ordersQuantity.Max(o => o.Value)).Key;
         return order;
     }
 }
