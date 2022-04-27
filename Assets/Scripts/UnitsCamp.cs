@@ -14,6 +14,8 @@ public class UnitsCamp : MonoBehaviour
     [SerializeField] private int maxYSpawn;
     [SerializeField] private int destroyReward;
     [SerializeField] private float allMoveToOrderDelayInSeconds;
+    [SerializeField] private float campRadius;
+    public float CampRadius => campRadius;
     public int DestroyReward => destroyReward;
 
     private bool isEnemy => !unitPrefab.IsPlayerUnit;

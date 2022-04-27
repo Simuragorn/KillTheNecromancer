@@ -40,12 +40,6 @@ public class MeleeUnitController : BaseUnitController
         attackZone.Init(this);
     }
 
-    public override void GetDamage(int damage)
-    {
-        base.GetDamage(damage);
-        ResetState();
-    }
-
     protected void ChaseEnemy(Vector2 targetPosition)
     {
         if (IsChasing || CurrentAction == UnitActionEnum.Attacking)

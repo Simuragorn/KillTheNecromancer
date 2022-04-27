@@ -11,11 +11,13 @@ public class Projectile : MonoBehaviour
     private float speed;
     private LayerMask enemyMask;
     private int damage;
+    private Vector2 launchPosition;
 
     private float targetMinDistance = 0.1f;
 
     public void Launch(Vector2 targetPos, float startSpeed, LayerMask enemyLayerMask, int damageValue)
     {
+        launchPosition = transform.position;
         targetPosition = targetPos;
         speed = startSpeed;
         enemyMask = enemyLayerMask;
@@ -47,7 +49,7 @@ public class Projectile : MonoBehaviour
         else
             EnemyUnitsManager.Instance.Enemies.TryGetValue(collision.gameObject, out unit);
 
-        unit.GetDamage(damage);
+        unit.GetDamage(damage, launchPosition);
         StartDestroy();
     }
 

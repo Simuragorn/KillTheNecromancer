@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UnitMove : MonoBehaviour
@@ -10,6 +11,7 @@ public class UnitMove : MonoBehaviour
     [SerializeField] private float nextPathPartDistance;
 
     private bool pathEnded = true;
+    public Action OnPathEnded;
 
     public void MoveTo(Vector2 target)
     {
@@ -37,6 +39,9 @@ public class UnitMove : MonoBehaviour
         CheckFlip(xDirection);
         pathEnded = (targetPosition == null ||
             Vector2.Distance(transform.position, targetPosition) <= nextPathPartDistance);
+        if (pathEnded && OnPathEnded != null)
+            OnPathEnded();
+
         Move();
     }
 

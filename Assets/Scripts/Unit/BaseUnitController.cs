@@ -20,6 +20,8 @@ public abstract class BaseUnitController : MonoBehaviour
     [SerializeField] private List<OrderSprite> orderSprites;
     [SerializeField] private SpriteRenderer orderSpriteRenderer;
 
+    [SerializeField] private int backToSpawnDelayInSeconds;
+
     protected int _layer;
 
     public bool IsChasing { protected set; get; }
@@ -50,6 +52,7 @@ public abstract class BaseUnitController : MonoBehaviour
         {
             OnSpawned();
         }
+        unitMove.OnPathEnded = ResetState;
     }
 
     public void Flip()
@@ -118,9 +121,11 @@ public abstract class BaseUnitController : MonoBehaviour
 
     public abstract void SetTarget(Vector2 targetPosition);
 
-    public virtual void GetDamage(int damage)
+    public virtual void GetDamage(int damage, Vector2? damagedFromPosition = null)
     {
         health.GetDamage(damage);
+        if (damagedFromPosition.HasValue)
+            MoveTo(damagedFromPosition.Value, MoveTypeEnum.ToEnemy);
     }
 
     public bool IsPlayerUnit => _layer == GameManager.Instance.AllyLayer.value;
@@ -143,6 +148,8 @@ public abstract class BaseUnitController : MonoBehaviour
     public void ResetState()
     {
         CurrentAction = UnitActionEnum.Idle;
+        if (camp != null)
+            StartCoroutine(StartReturningToCamp());
     }
 
     public void DisableMove()
@@ -153,6 +160,16 @@ public abstract class BaseUnitController : MonoBehaviour
     public void EnableMove()
     {
         _isMoveDisabled = false;
+    }
+
+    private IEnumerator StartReturningToCamp()
+    {
+        yield return new WaitForSeconds(backToSpawnDelayInSeconds);
+        float xOffset = UnityEngine.Random.Range(-camp.CampRadius, camp.CampRadius);
+        float yOffset = UnityEngine.Random.Range(-camp.CampRadius, camp.CampRadius);
+        Vector2 targetPosition = new Vector2(camp.transform.position.x + xOffset,
+            camp.transform.position.y + yOffset);
+        MoveTo(targetPosition, MoveTypeEnum.ToPosition);
     }
 
     protected void StartDeath()
