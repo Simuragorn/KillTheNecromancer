@@ -31,9 +31,9 @@ public class SelectableUnit : MonoBehaviour
         {
             UnitsSelection.Instance.AllGameObjectUnits.Remove(gameObject);
         }
-        if (UnitsSelection.Instance.selectedUnits.Contains(this))
+        if (UnitsSelection.Instance.SelectedUnits.Contains(this))
         {
-            UnitsSelection.Instance.selectedUnits.Remove(this);
+            UnitsSelection.Instance.SelectedUnits.Remove(this);
         }
     }
 }

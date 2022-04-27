@@ -1,5 +1,8 @@
 using Assets.Scripts.Constants;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class BaseUnitController : MonoBehaviour
@@ -13,6 +16,9 @@ public abstract class BaseUnitController : MonoBehaviour
     [SerializeField] protected SpriteRenderer spriteRenderer;
     [SerializeField] protected float transparentValue;
     [SerializeField] protected float chasingDelayInSeconds;
+
+    [SerializeField] private List<OrderSprite> orderSprites;
+    [SerializeField] private SpriteRenderer orderSpriteRenderer;
 
     protected int _layer;
 
@@ -81,6 +87,8 @@ public abstract class BaseUnitController : MonoBehaviour
             default:
                 break;
         }
+        Sprite orderSprite = orderSprites.FirstOrDefault(o => o.Order == order).Sprite;
+        orderSpriteRenderer.sprite = orderSprite;
     }
 
     public void MakeTransparent()
@@ -110,7 +118,7 @@ public abstract class BaseUnitController : MonoBehaviour
 
     public abstract void SetTarget(Vector2 targetPosition);
 
-    public void GetDamage(int damage)
+    public virtual void GetDamage(int damage)
     {
         health.GetDamage(damage);
     }
@@ -164,4 +172,11 @@ public abstract class BaseUnitController : MonoBehaviour
 
         animator.SetTrigger("Death");
     }
+}
+
+[Serializable]
+public class OrderSprite
+{
+    public UnitOrderEnum Order;
+    public Sprite Sprite;
 }

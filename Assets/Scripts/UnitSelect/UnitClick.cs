@@ -45,7 +45,7 @@ public class UnitClick : MonoBehaviour
         else if (!UnitsSelection.Instance.DragSelection &&
             !EventSystem.current.IsPointerOverGameObject())
         {
-            if (UnitsSelection.Instance.selectedUnits.Any())
+            if (UnitsSelection.Instance.SelectedUnits.Any())
                 UnitsSelection.Instance.MoveToPosition(targetPosition);
         }
     }

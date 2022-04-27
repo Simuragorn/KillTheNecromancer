@@ -10,7 +10,8 @@ public class UnitsSelection : MonoBehaviour
 {
     [SerializeField] private DistantTarget distantTargetMarker;
     public Dictionary<GameObject, SelectableUnit> AllGameObjectUnits;
-    public List<SelectableUnit> selectedUnits { private set; get; } = new List<SelectableUnit>();
+    public List<SelectableUnit> SelectedUnits { private set; get; } = new List<SelectableUnit>();
+    private Dictionary<KeyCode, List<SelectableUnit>> bindedUnits = new Dictionary<KeyCode, List<SelectableUnit>>();
 
     public static UnitsSelection Instance { get; private set; }
     public bool DragSelection { get; set; }
@@ -18,12 +19,27 @@ public class UnitsSelection : MonoBehaviour
     public UnitOrderEnum CurrentOrder;
     public Action<UnitFormationEnum> OnFormationChanged;
     public UnitFormationEnum CurrentFormation;
+
+    private List<KeyCode> bindingKeys;
     private void Awake()
     {
         Instance = this;
         AllGameObjectUnits = new Dictionary<GameObject, SelectableUnit>();
-        selectedUnits = new List<SelectableUnit>();
+        SelectedUnits = new List<SelectableUnit>();
         distantTargetMarker.gameObject.SetActive(false);
+        bindingKeys = new List<KeyCode>()
+        {
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4,
+            KeyCode.Alpha5,
+            KeyCode.Alpha6,
+            KeyCode.Alpha7,
+            KeyCode.Alpha8,
+            KeyCode.Alpha9,
+            KeyCode.Alpha0,
+        };
     }
 
     private void Start()
@@ -31,12 +47,33 @@ public class UnitsSelection : MonoBehaviour
         ChangeFormation(CurrentFormation);
     }
 
+    private void Update()
+    {
+        KeyCode bindingKey = bindingKeys.FirstOrDefault(key => Input.GetKeyUp(key));
+        if (bindingKey != default(KeyCode))
+        {
+            if (!bindedUnits.ContainsKey(bindingKey))
+                bindedUnits.Add(bindingKey, new List<SelectableUnit>());
+            if (Input.GetKey(KeyCode.LeftAlt))
+            {
+                bindedUnits[bindingKey] = new List<SelectableUnit>(SelectedUnits);
+            }
+            else
+            {
+                List<SelectableUnit> units = bindedUnits[bindingKey].ToList().Where(u => AllGameObjectUnits.ContainsKey(u?.gameObject)).ToList();
+                DeselectAll();
+                SelectedUnits = units;
+                SelectedUnits.ForEach(u => u.SelectOrDeselect(true));
+            }
+        }
+    }
+
     public void ClickSelect(GameObject gameObject)
     {
         DeselectAll();
         if (AllGameObjectUnits.TryGetValue(gameObject, out SelectableUnit unit))
         {
-            selectedUnits.Add(unit);
+            SelectedUnits.Add(unit);
             unit.SelectOrDeselect(true);
             OnOrderChanged(unit.Unit.CurrentOrder);
         }
@@ -45,14 +82,14 @@ public class UnitsSelection : MonoBehaviour
     {
         if (AllGameObjectUnits.TryGetValue(gameObject, out SelectableUnit unit))
         {
-            bool isAdd = !selectedUnits.Contains(unit);
+            bool isAdd = !SelectedUnits.Contains(unit);
             if (isAdd)
             {
-                selectedUnits.Add(unit);
+                SelectedUnits.Add(unit);
             }
             else
             {
-                selectedUnits.Remove(unit);
+                SelectedUnits.Remove(unit);
             }
             unit.SelectOrDeselect(isAdd);
         }
@@ -62,9 +99,9 @@ public class UnitsSelection : MonoBehaviour
     {
         if (AllGameObjectUnits.TryGetValue(gameObject, out SelectableUnit unit))
         {
-            if (!selectedUnits.Contains(unit))
+            if (!SelectedUnits.Contains(unit))
             {
-                selectedUnits.Add(unit);
+                SelectedUnits.Add(unit);
                 unit.SelectOrDeselect(true);
             }
         }
@@ -72,8 +109,8 @@ public class UnitsSelection : MonoBehaviour
     }
     public void DeselectAll()
     {
-        selectedUnits.ForEach(u => u.SelectOrDeselect(false));
-        selectedUnits.Clear();
+        SelectedUnits.ForEach(u => u.SelectOrDeselect(false));
+        SelectedUnits.Clear();
         OnOrderChanged(null);
     }
 
@@ -85,10 +122,10 @@ public class UnitsSelection : MonoBehaviour
             return;
         }
 
-        List<Vector3> positions = Assets.Scripts.UnitSelect.UnitFormationHelper.GetFormationPositions(CurrentFormation, targetPosition, selectedUnits.Count);
-        for (int i = 0; i < selectedUnits.Count; ++i)
+        List<Vector3> positions = Assets.Scripts.UnitSelect.UnitFormationHelper.GetFormationPositions(CurrentFormation, targetPosition, SelectedUnits.Count);
+        for (int i = 0; i < SelectedUnits.Count; ++i)
         {
-            SelectableUnit selectedUnit = selectedUnits[i];
+            SelectableUnit selectedUnit = SelectedUnits[i];
             selectedUnit.Unit.MoveTo(positions[i], MoveTypeEnum.ToPosition);
         }
     }
@@ -100,19 +137,19 @@ public class UnitsSelection : MonoBehaviour
 
     public void ChangeOrder(UnitOrderEnum unitOrder)
     {
-        if (selectedUnits == null)
+        if (SelectedUnits == null)
             return;
 
         distantTargetMarker.Hide();
 
         if (unitOrder == UnitOrderEnum.DistantAttack)
         {
-            if (!selectedUnits.Any(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant))
+            if (!SelectedUnits.Any(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant))
                 return;
             distantTargetMarker.MoveWithCursor(GetMaxDistantOffset());
         }
 
-        selectedUnits.ForEach(u => u.Unit.ChangeOrder(unitOrder));
+        SelectedUnits.ForEach(u => u.Unit.ChangeOrder(unitOrder));
         CurrentOrder = unitOrder;
         if (OnOrderChanged != null)
             OnOrderChanged(unitOrder);
@@ -127,7 +164,7 @@ public class UnitsSelection : MonoBehaviour
 
     public void SetSameOrderToAll()
     {
-        if (selectedUnits == null)
+        if (SelectedUnits == null)
             return;
 
         UnitOrderEnum popularOrder = GetMajorityOrder();
@@ -138,7 +175,7 @@ public class UnitsSelection : MonoBehaviour
     {
         if (distantTargetMarker.IsCursor)
         {
-            List<BaseUnitController> distanceUnits = selectedUnits.Where(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant).Select(u => u.Unit).ToList();
+            List<BaseUnitController> distanceUnits = SelectedUnits.Where(u => u.Unit.Unit.UnitType == UnitTypeEnum.Distant).Select(u => u.Unit).ToList();
 
             distantTargetMarker.Hide();
             distanceUnits.ForEach(u => u.SetTarget(targetPosition));
@@ -149,19 +186,19 @@ public class UnitsSelection : MonoBehaviour
 
     private float GetMaxDistantOffset()
     {
-        if (selectedUnits == null)
+        if (SelectedUnits == null)
             return 0;
-        return selectedUnits.Max(u => u.Unit.Unit.DistantSpotOffset);
+        return SelectedUnits.Max(u => u.Unit.Unit.DistantSpotOffset);
     }
 
     private UnitOrderEnum GetMajorityOrder()
     {
         var order = UnitOrderEnum.Attack;
-        if (!selectedUnits.Any())
+        if (!SelectedUnits.Any())
             return order;
 
         var ordersQuantity = new Dictionary<UnitOrderEnum, int>();
-        selectedUnits.ForEach(u =>
+        SelectedUnits.ForEach(u =>
         {
             if (ordersQuantity.ContainsKey(u.Unit.CurrentOrder))
                 ordersQuantity[u.Unit.CurrentOrder]++;

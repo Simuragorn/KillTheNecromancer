@@ -21,7 +21,7 @@ public class OrderButton : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(activationButton) && UnitsSelection.Instance.selectedUnits != null && UnitsSelection.Instance.selectedUnits.Any())
+        if (Input.GetKeyDown(activationButton) && UnitsSelection.Instance.SelectedUnits != null && UnitsSelection.Instance.SelectedUnits.Any())
             ChangeOrder();
     }
 

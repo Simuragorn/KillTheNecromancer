@@ -65,11 +65,18 @@ public class UnitDrag : MonoBehaviour
 
     private void SelectUnits()
     {
+        bool isFirstUnit = true;
         foreach (var unit in UnitsSelection.Instance.AllGameObjectUnits)
         {
             Vector2 unitPosition = camera.WorldToScreenPoint(unit.Key.transform.position);
             if (selectionBox.Contains(unitPosition))
             {
+                if (isFirstUnit)
+                {
+                    UnitsSelection.Instance.DeselectAll();
+                    isFirstUnit = false;
+                }
+
                 UnitsSelection.Instance.DragClickSelect(unit.Key);
                 StartCoroutine(OnDragSelection());
             }

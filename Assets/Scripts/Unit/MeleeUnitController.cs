@@ -26,10 +26,24 @@ public class MeleeUnitController : BaseUnitController
             base.MoveTo(targetPosition, moveType);
     }
 
+    public override void ChangeOrder(UnitOrderEnum order)
+    {
+        if (order == UnitOrderEnum.DistantAttack)
+            return;
+
+        base.ChangeOrder(order);
+    }
+
     protected override void Start()
     {
         base.Start();
         attackZone.Init(this);
+    }
+
+    public override void GetDamage(int damage)
+    {
+        base.GetDamage(damage);
+        ResetState();
     }
 
     protected void ChaseEnemy(Vector2 targetPosition)
