@@ -8,8 +8,8 @@ using UnityEngine;
 public class Unit
 {
     [Header("Base")]
-    [SerializeField] private int id;
-    public int Id => id;
+    [SerializeField] private UnitEnum id;
+    public UnitEnum Id => id;
     [SerializeField] private string unitName;
     public string UnitName => unitName;
     [SerializeField] private LayerMask enemyLayer;

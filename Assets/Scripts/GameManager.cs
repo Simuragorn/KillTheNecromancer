@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     public Unit GetUnitById(UnitEnum unitId)
     {
-        return _unitDB.GetUnitById((int)unitId);
+        return _unitDB.GetUnitById(unitId);
     }
 
     public void Victory()

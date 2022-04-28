@@ -49,8 +49,11 @@ public class Projectile : MonoBehaviour
         else
             EnemyUnitsManager.Instance.Enemies.TryGetValue(collision.gameObject, out unit);
 
-        unit.GetDamage(damage, launchPosition);
-        StartDestroy();
+        if (unit != null)
+        {
+            unit.GetDamage(damage, launchPosition);
+            StartDestroy();
+        }
     }
 
     private void StartDestroy()

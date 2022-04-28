@@ -30,12 +30,12 @@ MonoBehaviour:
     distantSpotOffset: 0
     projectileSpeed: 0
   - id: 10
-    unitName: Knight
+    unitName: HumanKnight
     enemyLayer:
       serializedVersion: 2
       m_Bits: 1024
     unitType: 0
-    cost: 0
+    cost: 5
     reward: 10
     damage: 5
     speed: 4
@@ -56,25 +56,41 @@ MonoBehaviour:
     damage: 5
     speed: 4
     health: 5
-    reloadInSeconds: 2
+    reloadInSeconds: 3
     sightRange: 0
     distantRange: 20
     distantSpotOffset: 5
     projectileSpeed: 15
-  currentUnit:
-    id: 2
-    unitName: DarkArcher
+  - id: 11
+    unitName: HumanArcher
     enemyLayer:
       serializedVersion: 2
-      m_Bits: 2048
+      m_Bits: 1024
     unitType: 1
-    cost: 10
-    reward: 0
+    cost: 5
+    reward: 5
+    damage: 5
+    speed: 3
+    health: 10
+    reloadInSeconds: 1.5
+    sightRange: 20
+    distantRange: 10
+    distantSpotOffset: 1
+    projectileSpeed: 15
+  currentUnit:
+    id: 10
+    unitName: HumanKnight
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 1024
+    unitType: 0
+    cost: 5
+    reward: 10
     damage: 5
     speed: 4
-    health: 5
+    health: 35
     reloadInSeconds: 2
-    sightRange: 0
-    distantRange: 20
-    distantSpotOffset: 5
-    projectileSpeed: 15
+    sightRange: 5
+    distantRange: 0
+    distantSpotOffset: 0
+    projectileSpeed: 0

@@ -26,12 +26,13 @@ public abstract class BaseUnitController : MonoBehaviour
 
     public bool IsChasing { protected set; get; }
     public UnitEnum UnitId => unitId;
+    public Unit Unit { private set; get; }
 
     protected UnitsCamp camp;
 
     protected bool _isMoveDisabled;
 
-    public Unit Unit { protected set; get; }
+    private bool isInited;
 
     public UnitActionEnum CurrentAction { get; protected set; }
     public UnitOrderEnum CurrentOrder { get; protected set; }
@@ -43,7 +44,7 @@ public abstract class BaseUnitController : MonoBehaviour
 
     public bool IsFlipped { private set; get; }
 
-    public void Init(UnitsCamp unitCamp)
+    public virtual void Init(UnitsCamp unitCamp)
     {
         camp = unitCamp;
         OnSpawning();
@@ -51,8 +52,20 @@ public abstract class BaseUnitController : MonoBehaviour
         if (camp != null)
         {
             OnSpawned();
+            unitCamp.Units.Add(this);
         }
-        unitMove.OnPathEnded = ResetState;
+
+        Unit = GameManager.Instance.GetUnitById(UnitId);
+        _layer = 1 << gameObject.layer;
+        if (IsPlayerUnit)
+            PlayerUnitsManager.Instance.PlayerUnits.Add(gameObject, this);
+        else
+            EnemyUnitsManager.Instance.AddUnit(this);
+        health.OnDeath += StartDeath;
+
+        health.Init(Unit.Health);
+        sight.Init(this);
+        isInited = true;
     }
 
     public void Flip()
@@ -60,6 +73,12 @@ public abstract class BaseUnitController : MonoBehaviour
         IsFlipped = !IsFlipped;
         float xScale = IsFlipped ? -1 : 1;
         transform.localScale = new Vector3(xScale, transform.localScale.y, transform.localScale.z);
+    }
+
+    private void Start()
+    {
+        if (!isInited)
+            Init(null);
     }
 
     protected virtual void OnSpawning()
@@ -104,37 +123,34 @@ public abstract class BaseUnitController : MonoBehaviour
         spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 1);
     }
 
-
-    protected virtual void Start()
-    {
-        Unit = GameManager.Instance.GetUnitById(UnitId);
-        _layer = 1 << gameObject.layer;
-        if (IsPlayerUnit)
-            PlayerUnitsManager.Instance.PlayerUnits.Add(gameObject, this);
-        else
-            EnemyUnitsManager.Instance.AddUnit(this);
-        health.OnDeath += StartDeath;
-
-        health.Init(Unit.Health);
-        sight.Init(this);
-    }
-
     public abstract void SetTarget(Vector2 targetPosition);
 
     public virtual void GetDamage(int damage, Vector2? damagedFromPosition = null)
     {
         health.GetDamage(damage);
-        if (damagedFromPosition.HasValue)
+        if (CurrentOrder == UnitOrderEnum.Attack && damagedFromPosition.HasValue)
             MoveTo(damagedFromPosition.Value, MoveTypeEnum.ToEnemy);
     }
 
     public bool IsPlayerUnit => _layer == GameManager.Instance.AllyLayer.value;
 
+    public virtual void EnemySpotted(Vector2 enemyPosition)
+    {
+        MoveTo(enemyPosition, MoveTypeEnum.ToEnemy);
+    }
+
+    public virtual void NoEnemySpotted()
+    {
+        if (CurrentAction == UnitActionEnum.Attacking ||
+            CurrentAction == UnitActionEnum.Chasing)
+            ResetState();
+    }
+
     public virtual void MoveTo(Vector2 targetPosition, MoveTypeEnum moveType)
     {
         CurrentAction = UnitActionEnum.Moving;
         targetPosition -= (Vector2)unitPosition.transform.localPosition;
-        unitMove.MoveTo(targetPosition);
+        unitMove.MoveTo(targetPosition, moveType);
     }
 
     public virtual void StartAttack()

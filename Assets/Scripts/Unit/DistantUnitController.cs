@@ -9,20 +9,45 @@ public class DistantUnitController : BaseUnitController
     public DistantTarget distantTargetMarker;
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform projectileSpawn;
+    private Vector2 targetPosition;
 
     private bool isReloading;
     protected void FixedUpdate()
     {
-        if (!isReloading && distantTargetMarker.isActiveAndEnabled)
+        if (!distantTargetMarker.isActiveAndEnabled)
+            return;
+        float actualDistance = Vector2.Distance(targetPosition, transform.position);
+        if (actualDistance > Unit.DistantRange)
+        {
+            MoveTo(targetPosition, MoveTypeEnum.ToEnemy);
+            distantTargetMarker.transform.position = targetPosition;
+            return;
+        }
+        if (!isReloading)
         {
             StartAttack();
             StartCoroutine(StartReloading());
         }
     }
 
+    public override void EnemySpotted(Vector2 enemyPosition)
+    {
+        distantTargetMarker.SetPosition(Unit.DistantSpotOffset, enemyPosition);
+        targetPosition = distantTargetMarker.transform.position;
+        if (camp != null)
+            camp.EnemyUnitSpotted(enemyPosition);
+    }
+
+    public override void NoEnemySpotted()
+    {
+        base.NoEnemySpotted();
+        distantTargetMarker.Hide();
+    }
+
     public override void MoveTo(Vector2 targetPosition, MoveTypeEnum moveType)
     {
-        distantTargetMarker.Hide();
+        if (moveType != MoveTypeEnum.ToEnemy)
+            distantTargetMarker.Hide();
         base.MoveTo(targetPosition, moveType);
     }
 
@@ -36,25 +61,29 @@ public class DistantUnitController : BaseUnitController
     public override void StartAttack()
     {
         base.StartAttack();
-        Vector2 targetPosition = distantTargetMarker.transform.position;
-        float xDirection = distantTargetMarker.transform.position.x - transform.position.x;
+        Vector2 fixedTargetPosition = targetPosition;
+        float xDirection = targetPosition.x - transform.position.x;
         if (IsFlipped && xDirection > 0)
             Flip();
         else if (!IsFlipped && xDirection < 0)
             Flip();
+        targetPosition = fixedTargetPosition;
         distantTargetMarker.transform.position = targetPosition;
     }
     public override void Attack()
     {
         if (distantTargetMarker.isActiveAndEnabled)
+        {
             DistantAttack();
+        }
     }
 
-    public override void SetTarget(Vector2 targetPosition)
+    public override void SetTarget(Vector2 newTargetPosition)
     {
         if (Unit.UnitType == UnitTypeEnum.Distant)
         {
-            distantTargetMarker.SetPosition(Unit.DistantSpotOffset, targetPosition);
+            distantTargetMarker.SetPosition(Unit.DistantSpotOffset, newTargetPosition);
+            targetPosition = newTargetPosition;
         }
     }
 
@@ -65,9 +94,9 @@ public class DistantUnitController : BaseUnitController
         projectile.Launch(targetPosition, Unit.ProjectileSpeed, Unit.EnemyLayer, Unit.Damage);
     }
 
-    protected override void Start()
+    public override void Init(UnitsCamp unitCamp)
     {
-        base.Start();
+        base.Init(unitCamp);
         distantTargetMarker.Hide();
     }
 
@@ -82,7 +111,7 @@ public class DistantUnitController : BaseUnitController
     {
         float xOffset = UnityEngine.Random.Range(-Unit.DistantSpotOffset / 2f, Unit.DistantSpotOffset / 2f);
         float yOffset = UnityEngine.Random.Range(-Unit.DistantSpotOffset / 2f, Unit.DistantSpotOffset / 2f);
-        Vector2 targetPosition = new Vector2(distantTargetMarker.transform.position.x + xOffset, distantTargetMarker.transform.position.y + yOffset);
-        return targetPosition;
+        Vector2 actualTargetPosition = new Vector2(targetPosition.x + xOffset, targetPosition.y + yOffset);
+        return actualTargetPosition;
     }
 }

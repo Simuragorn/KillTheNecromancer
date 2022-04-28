@@ -1,4 +1,6 @@
 using Assets.Scripts.Constants;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UnitSight : MonoBehaviour
@@ -20,16 +22,18 @@ public class UnitSight : MonoBehaviour
 
     private void Sight()
     {
-        if (Time.frameCount % framesPerSight > 0 ||
-            (unit.CurrentAction == UnitActionEnum.Attacking))
+        if (Time.frameCount % framesPerSight > 0 || sightRange == 0)
         {
             return;
         }
+        var filter = new ContactFilter2D { layerMask = unit.Unit.EnemyLayer, useLayerMask = true, useTriggers = true };
+        var colliderResults = new List<Collider2D>();
+        Physics2D.OverlapCircle(transform.position, sightRange, filter, colliderResults);
 
-        Collider2D enemyCollider = Physics2D.OverlapCircle(transform.position, sightRange, unit.Unit.EnemyLayer);
-
-        if (enemyCollider != null)
-            unit.MoveTo(enemyCollider.transform.position, MoveTypeEnum.ToEnemy);
+        if (colliderResults.Any())
+            unit.EnemySpotted(colliderResults[0].transform.position);
+        else
+            unit.NoEnemySpotted();
     }
 
     private void OnDrawGizmosSelected()

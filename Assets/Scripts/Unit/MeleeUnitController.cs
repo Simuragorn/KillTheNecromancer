@@ -34,9 +34,9 @@ public class MeleeUnitController : BaseUnitController
         base.ChangeOrder(order);
     }
 
-    protected override void Start()
+    public override void Init(UnitsCamp unitCamp)
     {
-        base.Start();
+        base.Init(unitCamp);
         attackZone.Init(this);
     }
 
@@ -46,7 +46,7 @@ public class MeleeUnitController : BaseUnitController
             return;
 
         CurrentAction = UnitActionEnum.Chasing;
-        unitMove.MoveTo(targetPosition);
+        unitMove.MoveTo(targetPosition, MoveTypeEnum.ToEnemy);
 
         if (camp != null)
         {

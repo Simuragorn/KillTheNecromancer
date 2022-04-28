@@ -1,3 +1,4 @@
+using Assets.Scripts.Constants;
 using System;
 using UnityEngine;
 
@@ -9,14 +10,20 @@ public class UnitMove : MonoBehaviour
     [SerializeField] BaseUnitController unit;
 
     [SerializeField] private float nextPathPartDistance;
+    private MoveTypeEnum currentMovingType;
 
     private bool pathEnded = true;
-    public Action OnPathEnded;
 
-    public void MoveTo(Vector2 target)
+    public void MoveTo(Vector2 target, MoveTypeEnum movingType)
     {
+        currentMovingType = movingType;
         targetPosition = target;
         pathEnded = false;
+    }
+
+    public void ResetMove()
+    {
+        targetPosition = transform.position;
     }
 
     private void CheckFlip(float xDirection)
@@ -39,8 +46,6 @@ public class UnitMove : MonoBehaviour
         CheckFlip(xDirection);
         pathEnded = (targetPosition == null ||
             Vector2.Distance(transform.position, targetPosition) <= nextPathPartDistance);
-        if (pathEnded && OnPathEnded != null)
-            OnPathEnded();
 
         Move();
     }

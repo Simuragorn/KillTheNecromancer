@@ -555,9 +555,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9476d9a7e244ba4b949e719aa4749ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemiesCount: 10
   spawnCenter: {fileID: 1752485018362419722}
-  unitPrefab: {fileID: 2616200046619565556, guid: b033f94eee9e53f46a791908bc8446fa, type: 3}
+  unitPrefabs:
+  - {fileID: 7967029976658495067, guid: 1ccd4f7c33da6a745a3bd892e3953538, type: 3}
+  - {fileID: 2616200046619565556, guid: b033f94eee9e53f46a791908bc8446fa, type: 3}
+  campBalance: 50
   minXSpawn: -5
   maxXSpawn: 5
   minYSpawn: -5

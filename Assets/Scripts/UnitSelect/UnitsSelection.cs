@@ -64,6 +64,7 @@ public class UnitsSelection : MonoBehaviour
                 DeselectAll();
                 SelectedUnits = units;
                 SelectedUnits.ForEach(u => u.SelectOrDeselect(true));
+                SetSameOrderToAll();
             }
         }
     }

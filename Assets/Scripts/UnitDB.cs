@@ -1,3 +1,4 @@
+using Assets.Scripts.Constants;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,7 @@ public class UnitDB : ScriptableObject
         currentIndex = 0;
     }
 
-    public Unit GetUnitById(int unitId)
+    public Unit GetUnitById(UnitEnum unitId)
     {
         return units.FirstOrDefault(u => u.Id == unitId);
     }

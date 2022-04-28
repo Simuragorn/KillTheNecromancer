@@ -13,6 +13,7 @@ namespace Assets.Scripts.Constants
         DarkArcher = 2,
 
         //Enemies
-        Knight = 10,
+        HumanKnight = 10,
+        HumanArcher = 11,
     }
 }
