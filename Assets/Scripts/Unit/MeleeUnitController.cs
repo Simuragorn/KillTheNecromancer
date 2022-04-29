@@ -6,16 +6,16 @@ public class MeleeUnitController : BaseUnitController
 {
     [SerializeField] protected UnitAttackZone attackZone;
 
-    protected override void OnSpawning()
+    public override void StartSpawn()
     {
-        base.OnSpawning();
-        attackZone.enabled = false;
+        base.StartSpawn();
+        attackZone.gameObject.SetActive(false);
     }
 
-    public override void OnSpawned()
+    protected override void OnSpawned()
     {
         base.OnSpawned();
-        attackZone.enabled = true;
+        attackZone.gameObject.SetActive(true);
     }
 
     public override void MoveTo(Vector2 targetPosition, MoveTypeEnum moveType)

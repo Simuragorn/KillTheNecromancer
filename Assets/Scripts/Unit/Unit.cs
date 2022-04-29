@@ -41,4 +41,6 @@ public class Unit
     public float DistantSpotOffset => distantSpotOffset;
     [SerializeField] private float projectileSpeed;
     public float ProjectileSpeed => projectileSpeed;
+    [SerializeField] private float stunInSeconds;
+    public float StunInSeconds => stunInSeconds;
 }

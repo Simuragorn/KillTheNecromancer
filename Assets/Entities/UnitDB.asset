@@ -21,7 +21,7 @@ MonoBehaviour:
     unitType: 0
     cost: 5
     reward: 0
-    damage: 5
+    damage: 10
     speed: 2
     health: 40
     reloadInSeconds: 3
@@ -29,6 +29,7 @@ MonoBehaviour:
     distantRange: 0
     distantSpotOffset: 0
     projectileSpeed: 0
+    stunInSeconds: 1
   - id: 10
     unitName: HumanKnight
     enemyLayer:
@@ -38,13 +39,14 @@ MonoBehaviour:
     cost: 5
     reward: 10
     damage: 5
-    speed: 4
-    health: 35
+    speed: 5
+    health: 30
     reloadInSeconds: 2
-    sightRange: 5
+    sightRange: 10
     distantRange: 0
     distantSpotOffset: 0
     projectileSpeed: 0
+    stunInSeconds: 1
   - id: 2
     unitName: DarkArcher
     enemyLayer:
@@ -54,13 +56,14 @@ MonoBehaviour:
     cost: 10
     reward: 0
     damage: 5
-    speed: 4
+    speed: 2
     health: 5
     reloadInSeconds: 3
     sightRange: 0
     distantRange: 20
     distantSpotOffset: 5
     projectileSpeed: 15
+    stunInSeconds: 1
   - id: 11
     unitName: HumanArcher
     enemyLayer:
@@ -70,27 +73,29 @@ MonoBehaviour:
     cost: 5
     reward: 5
     damage: 5
-    speed: 3
+    speed: 5
     health: 10
     reloadInSeconds: 1.5
-    sightRange: 20
+    sightRange: 15
     distantRange: 10
     distantSpotOffset: 1
     projectileSpeed: 15
+    stunInSeconds: 1
   currentUnit:
-    id: 10
-    unitName: HumanKnight
+    id: 1
+    unitName: DamagedSkeleton
     enemyLayer:
       serializedVersion: 2
-      m_Bits: 1024
+      m_Bits: 2048
     unitType: 0
     cost: 5
-    reward: 10
-    damage: 5
-    speed: 4
-    health: 35
-    reloadInSeconds: 2
+    reward: 0
+    damage: 10
+    speed: 2
+    health: 40
+    reloadInSeconds: 3
     sightRange: 5
     distantRange: 0
     distantSpotOffset: 0
     projectileSpeed: 0
+    stunInSeconds: 1

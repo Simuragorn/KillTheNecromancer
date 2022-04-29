@@ -7,6 +7,7 @@ public class Health : MonoBehaviour
     [SerializeField] private Collider2D collider;
     private int health;
     public Action OnDeath;
+    public int CurrentHealth => health;
 
     public void Init(int startHealth)
     {

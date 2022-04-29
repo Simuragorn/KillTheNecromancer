@@ -21,6 +21,7 @@ public abstract class BaseUnitController : MonoBehaviour
     [SerializeField] private SpriteRenderer orderSpriteRenderer;
 
     [SerializeField] private int backToSpawnDelayInSeconds;
+    public bool IsDead { private set; get; }
 
     protected int _layer;
 
@@ -47,7 +48,7 @@ public abstract class BaseUnitController : MonoBehaviour
     public virtual void Init(UnitsCamp unitCamp)
     {
         camp = unitCamp;
-        OnSpawning();
+        StartSpawn();
 
         if (camp != null)
         {
@@ -81,13 +82,21 @@ public abstract class BaseUnitController : MonoBehaviour
             Init(null);
     }
 
-    protected virtual void OnSpawning()
+    public virtual void StartSpawn()
+    {
+        StartCoroutine(Spawning());
+    }
+
+    protected virtual IEnumerator Spawning()
     {
         unitMove.enabled = false;
         sight.enabled = false;
+        yield return new WaitForSeconds(1);
+        if (!IsDead)
+            OnSpawned();
     }
 
-    public virtual void OnSpawned()
+    protected virtual void OnSpawned()
     {
         CurrentAction = UnitActionEnum.Idle;
         unitMove.enabled = true;
@@ -130,6 +139,7 @@ public abstract class BaseUnitController : MonoBehaviour
         health.GetDamage(damage);
         if (CurrentOrder == UnitOrderEnum.Attack && damagedFromPosition.HasValue)
             MoveTo(damagedFromPosition.Value, MoveTypeEnum.ToEnemy);
+        Stun();
     }
 
     public bool IsPlayerUnit => _layer == GameManager.Instance.AllyLayer.value;
@@ -168,13 +178,15 @@ public abstract class BaseUnitController : MonoBehaviour
             StartCoroutine(StartReturningToCamp());
     }
 
-    public void DisableMove()
+    public void Stun()
     {
-        _isMoveDisabled = true;
+        StartCoroutine(StartStun());
     }
 
-    public void EnableMove()
+    private IEnumerator StartStun()
     {
+        _isMoveDisabled = true;
+        yield return new WaitForSeconds(Unit.StunInSeconds);
         _isMoveDisabled = false;
     }
 
@@ -204,6 +216,7 @@ public abstract class BaseUnitController : MonoBehaviour
             script.enabled = false;
 
         animator.SetTrigger("Death");
+        IsDead = true;
     }
 }
 

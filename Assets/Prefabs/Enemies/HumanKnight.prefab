@@ -163,6 +163,7 @@ MonoBehaviour:
   orderSprites: []
   orderSpriteRenderer: {fileID: 0}
   backToSpawnDelayInSeconds: 5
+  stunInSeconds: 1
   attackZone: {fileID: 2259306808871637157}
 --- !u!61 &1662912494327944215
 BoxCollider2D:

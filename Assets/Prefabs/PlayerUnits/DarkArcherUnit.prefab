@@ -426,7 +426,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7523063028623218250}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3af092962832a843a22b4f8ca49a52a, type: 3}
   m_Name: 
@@ -460,6 +460,7 @@ MonoBehaviour:
   - Order: 2
     Sprite: {fileID: 8467423411896323172, guid: ebec1f02f775e1241955a061091be656, type: 3}
   orderSpriteRenderer: {fileID: 5277335092171406234}
+  backToSpawnDelayInSeconds: 0
   distantTargetMarker: {fileID: 6532839838746827938}
   projectilePrefab: {fileID: 9168224954023179905, guid: 92e0f9827b7c9384f891a85609694efd, type: 3}
   projectileSpawn: {fileID: 1094192999587033976}
