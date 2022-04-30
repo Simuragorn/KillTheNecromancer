@@ -136,10 +136,19 @@ public abstract class BaseUnitController : MonoBehaviour
 
     public virtual void GetDamage(int damage, Vector2? damagedFromPosition = null)
     {
-        health.GetDamage(damage);
+        if (IsBlocked())
+            animator.SetTrigger("Block");
+        else
+            health.GetDamage(damage);
+        Stun();
         if (CurrentOrder == UnitOrderEnum.Attack && damagedFromPosition.HasValue)
             MoveTo(damagedFromPosition.Value, MoveTypeEnum.ToEnemy);
-        Stun();
+    }
+
+    private bool IsBlocked()
+    {
+        int actualPercentage = UnityEngine.Random.Range(0, 101);
+        return actualPercentage <= Unit.BlockChancePercentage;
     }
 
     public bool IsPlayerUnit => _layer == GameManager.Instance.AllyLayer.value;
@@ -173,6 +182,9 @@ public abstract class BaseUnitController : MonoBehaviour
 
     public void ResetState()
     {
+        if (IsDead)
+            return;
+
         CurrentAction = UnitActionEnum.Idle;
         if (camp != null)
             StartCoroutine(StartReturningToCamp());
@@ -193,11 +205,14 @@ public abstract class BaseUnitController : MonoBehaviour
     private IEnumerator StartReturningToCamp()
     {
         yield return new WaitForSeconds(backToSpawnDelayInSeconds);
-        float xOffset = UnityEngine.Random.Range(-camp.CampRadius, camp.CampRadius);
-        float yOffset = UnityEngine.Random.Range(-camp.CampRadius, camp.CampRadius);
-        Vector2 targetPosition = new Vector2(camp.transform.position.x + xOffset,
-            camp.transform.position.y + yOffset);
-        MoveTo(targetPosition, MoveTypeEnum.ToPosition);
+        if (camp != null && IsDead)
+        {
+            float xOffset = UnityEngine.Random.Range(-camp.CampRadius, camp.CampRadius);
+            float yOffset = UnityEngine.Random.Range(-camp.CampRadius, camp.CampRadius);
+            Vector2 targetPosition = new Vector2(camp.transform.position.x + xOffset,
+                camp.transform.position.y + yOffset);
+            MoveTo(targetPosition, MoveTypeEnum.ToPosition);
+        }
     }
 
     protected void StartDeath()

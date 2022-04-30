@@ -141,7 +141,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0, g: 0.6792453, b: 0.045650914, a: 0.5254902}
   m_FlipX: 0
@@ -405,7 +405,6 @@ MonoBehaviour:
     Sprite: {fileID: 8467423411896323172, guid: ebec1f02f775e1241955a061091be656, type: 3}
   orderSpriteRenderer: {fileID: 4303626938050898993}
   backToSpawnDelayInSeconds: 0
-  stunInSeconds: 1
   attackZone: {fileID: 9006277457368191182}
 --- !u!61 &8409847960599893116
 BoxCollider2D:

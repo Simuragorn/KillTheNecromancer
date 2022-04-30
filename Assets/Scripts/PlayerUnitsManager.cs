@@ -71,7 +71,7 @@ public class PlayerUnitsManager : MonoBehaviour
 
     private void CheckSpawnUnit()
     {
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetMouseButtonDown(0))
+        if (Input.GetKey(KeyCode.Space) && Input.GetMouseButtonDown(0))
         {
             if (PlayerMoney >= unit.Cost)
             {

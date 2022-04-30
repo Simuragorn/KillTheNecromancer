@@ -43,4 +43,6 @@ public class Unit
     public float ProjectileSpeed => projectileSpeed;
     [SerializeField] private float stunInSeconds;
     public float StunInSeconds => stunInSeconds;
+    [SerializeField] private int blockChancePercentage;
+    public int BlockChancePercentage => blockChancePercentage;
 }

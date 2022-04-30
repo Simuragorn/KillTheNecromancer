@@ -54,7 +54,7 @@ public class UnitsSelection : MonoBehaviour
         {
             if (!bindedUnits.ContainsKey(bindingKey))
                 bindedUnits.Add(bindingKey, new List<SelectableUnit>());
-            if (Input.GetKey(KeyCode.LeftAlt))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
                 bindedUnits[bindingKey] = new List<SelectableUnit>(SelectedUnits);
             }

@@ -71,6 +71,7 @@ public class UnitAttackZone : MonoBehaviour
         }
 
         unit.StartAttack();
+        StartCoroutine(ReloadAndAttack());
     }
 
     public void DealDamage()
@@ -78,7 +79,6 @@ public class UnitAttackZone : MonoBehaviour
         if (EnemyTarget != null)
         {
             EnemyTarget.GetDamage(damage);
-            StartCoroutine(ReloadAndAttack());
         }
     }
 
@@ -87,14 +87,9 @@ public class UnitAttackZone : MonoBehaviour
         IsReloading = true;
         yield return new WaitForSeconds(reloadInSeconds);
         IsReloading = false;
-
         if (EnemyTarget != null)
-        {
             StartAttack();
-        }
         else
-        {
             unit.ResetState();
-        }
     }
 }

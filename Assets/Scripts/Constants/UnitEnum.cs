@@ -11,6 +11,9 @@ namespace Assets.Scripts.Constants
         //Player
         DamagedSkeleton = 1,
         DarkArcher = 2,
+        ArmoredSkeleton = 3,
+        Mucus = 4,
+        SpearSkeleton = 5,
 
         //Enemies
         HumanKnight = 10,

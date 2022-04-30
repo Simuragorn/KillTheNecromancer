@@ -23,13 +23,14 @@ MonoBehaviour:
     reward: 0
     damage: 10
     speed: 2
-    health: 40
-    reloadInSeconds: 3
+    health: 20
+    reloadInSeconds: 3.5
     sightRange: 5
     distantRange: 0
     distantSpotOffset: 0
     projectileSpeed: 0
     stunInSeconds: 1
+    blockChancePercentage: 0
   - id: 10
     unitName: HumanKnight
     enemyLayer:
@@ -47,6 +48,7 @@ MonoBehaviour:
     distantSpotOffset: 0
     projectileSpeed: 0
     stunInSeconds: 1
+    blockChancePercentage: 0
   - id: 2
     unitName: DarkArcher
     enemyLayer:
@@ -64,6 +66,7 @@ MonoBehaviour:
     distantSpotOffset: 5
     projectileSpeed: 15
     stunInSeconds: 1
+    blockChancePercentage: 0
   - id: 11
     unitName: HumanArcher
     enemyLayer:
@@ -81,21 +84,77 @@ MonoBehaviour:
     distantSpotOffset: 1
     projectileSpeed: 15
     stunInSeconds: 1
-  currentUnit:
-    id: 1
-    unitName: DamagedSkeleton
+    blockChancePercentage: 0
+  - id: 3
+    unitName: Armored Skeleton
     enemyLayer:
       serializedVersion: 2
       m_Bits: 2048
     unitType: 0
-    cost: 5
+    cost: 12
     reward: 0
-    damage: 10
+    damage: 7
     speed: 2
-    health: 40
-    reloadInSeconds: 3
+    health: 45
+    reloadInSeconds: 5
     sightRange: 5
     distantRange: 0
     distantSpotOffset: 0
     projectileSpeed: 0
     stunInSeconds: 1
+    blockChancePercentage: 75
+  - id: 4
+    unitName: Mucus
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    unitType: 0
+    cost: 1
+    reward: 0
+    damage: 2
+    speed: 2
+    health: 5
+    reloadInSeconds: 1
+    sightRange: 10
+    distantRange: 0
+    distantSpotOffset: 0
+    projectileSpeed: 0
+    stunInSeconds: 1
+    blockChancePercentage: 0
+  - id: 5
+    unitName: Spear Skeleton
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    unitType: 0
+    cost: 15
+    reward: 0
+    damage: 10
+    speed: 3
+    health: 20
+    reloadInSeconds: 3
+    sightRange: 8
+    distantRange: 0
+    distantSpotOffset: 0
+    projectileSpeed: 0
+    stunInSeconds: 1
+    blockChancePercentage: 0
+  currentUnit:
+    id: 5
+    unitName: Spear Skeleton
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    unitType: 0
+    cost: 15
+    reward: 0
+    damage: 10
+    speed: 3
+    health: 20
+    reloadInSeconds: 3
+    sightRange: 8
+    distantRange: 0
+    distantSpotOffset: 0
+    projectileSpeed: 0
+    stunInSeconds: 1
+    blockChancePercentage: 0
