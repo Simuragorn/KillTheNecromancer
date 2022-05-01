@@ -147,7 +147,7 @@ public abstract class BaseUnitController : MonoBehaviour
 
     private bool IsBlocked()
     {
-        int actualPercentage = UnityEngine.Random.Range(0, 101);
+        int actualPercentage = UnityEngine.Random.Range(1, 101);
         return actualPercentage <= Unit.BlockChancePercentage;
     }
 

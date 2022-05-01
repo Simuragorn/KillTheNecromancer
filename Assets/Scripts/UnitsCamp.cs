@@ -7,7 +7,8 @@ using UnityEngine;
 public class UnitsCamp : MonoBehaviour
 {
     [SerializeField] private Transform spawnCenter;
-    [SerializeField] private List<BaseUnitController> unitPrefabs;
+    [SerializeField] private List<RandomUnit> randomUnits;
+    [SerializeField] private List<RequiredUnit> requiredUnits;
     [SerializeField] private float campBalance;
     [SerializeField] private int minXSpawn;
     [SerializeField] private int maxXSpawn;
@@ -16,6 +17,8 @@ public class UnitsCamp : MonoBehaviour
     [SerializeField] private int destroyReward;
     [SerializeField] private float allMoveToOrderDelayInSeconds;
     [SerializeField] private float campRadius;
+
+    private List<UnitEnum> randomizerList;
     public float CampRadius => campRadius;
     public int DestroyReward => destroyReward;
 
@@ -44,7 +47,7 @@ public class UnitsCamp : MonoBehaviour
 
     private void Start()
     {
-        isEnemy = !unitPrefabs.First().IsPlayerUnit;
+        isEnemy = !randomUnits.First().Unit.IsPlayerUnit;
         if (isEnemy)
         {
             EnemyUnitsManager.Instance.AddCamp(this);
@@ -53,26 +56,66 @@ public class UnitsCamp : MonoBehaviour
         SpawnUnits();
     }
 
+    private void InitRandomizerList()
+    {
+        randomizerList = new List<UnitEnum>();
+        randomUnits.ForEach(u =>
+        {
+            for (int i = 0; i < u.Chance; i++)
+                randomizerList.Add(u.Unit.UnitId);
+        });
+    }
     private void SpawnUnits()
     {
         Units = new List<BaseUnitController>();
-        List<UnitEnum> unitIds = unitPrefabs.Select(u => u.UnitId).ToList();
-        List<Unit> unitsData = unitIds.Select(id => GameManager.Instance.GetUnitById(id)).ToList();
-        float minUnitCost = unitsData.Min(u => u.Cost);
+        InitRandomizerList();
+
+        SpawnRequiredUnits();
+
+        List<UnitEnum> unitIds = randomUnits.Select(u => u.Unit.UnitId).ToList();
+        List<(Unit Unit, int Chance)> unitsData = unitIds.Select(id =>
+        {
+            Unit unit = GameManager.Instance.GetUnitById(id);
+            int chance = randomUnits.First(u => u.Unit.UnitId == id).Chance;
+            return (unit, chance);
+        }).ToList();
+        float minUnitCost = unitsData.Min(u => u.Unit.Cost);
 
         while (campBalance >= minUnitCost)
-        {
-            SpawnUnit(unitsData);
-        }
+            SpawnRandomUnit(unitsData);
     }
 
-    private void SpawnUnit(List<Unit> unitsData)
+    private void SpawnRequiredUnits()
     {
-        List<Unit> suitableUnitsData = unitsData.Where(u => u.Cost <= campBalance).ToList();
+        if (requiredUnits == null)
+            return;
+        requiredUnits.ForEach(u =>
+        {
+            Unit unit = GameManager.Instance.GetUnitById(u.Unit);
+            for (int i = 0; i < u.Quantity; ++i)
+                SpawnUnit(unit);
+        });
+    }
+
+    private void SpawnRandomUnit(List<(Unit Unit, int Chance)> unitsData)
+    {
+        List<(Unit Unit, int Chance)> suitableUnitsData = unitsData.Where(u => u.Unit.Cost <= campBalance).ToList();
         if (!suitableUnitsData.Any())
             return;
-        Unit unitData = suitableUnitsData[Random.Range(0, suitableUnitsData.Count)];
-        BaseUnitController unitPrefab = unitPrefabs.First(u => u.UnitId == unitData.Id);
+
+        UnitEnum unitId = GetRandomUnitId();
+        Unit unitData = suitableUnitsData.First(u => u.Unit.Id == unitId).Unit;
+        SpawnUnit(unitData);
+    }
+
+    private UnitEnum GetRandomUnitId()
+    {
+        int id = Random.Range(1, randomizerList.Count);
+        return randomizerList[id];
+    }
+    private void SpawnUnit(Unit unitData)
+    {
+        BaseUnitController unitPrefab = randomUnits.First(u => u.Unit.UnitId == unitData.Id).Unit;
         float randomX = Random.Range(minXSpawn, maxXSpawn);
         float randomY = Random.Range(minYSpawn, maxYSpawn);
         Vector2 spawnPos = new Vector2(spawnCenter.position.x + randomX, spawnCenter.position.y + randomY);
@@ -104,4 +147,18 @@ public class UnitsCamp : MonoBehaviour
             EnemyUnitsManager.Instance.RemoveCamp(this);
         }
     }
+}
+
+[System.Serializable]
+public class RequiredUnit
+{
+    public UnitEnum Unit;
+    public int Quantity;
+}
+
+[System.Serializable]
+public class RandomUnit
+{
+    public BaseUnitController Unit;
+    public int Chance;
 }

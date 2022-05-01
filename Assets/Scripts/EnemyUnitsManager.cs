@@ -10,6 +10,7 @@ public class EnemyUnitsManager : MonoBehaviour
     public static EnemyUnitsManager Instance { private set; get; }
     public Dictionary<GameObject, BaseUnitController> Enemies { get; set; }
     public List<UnitsCamp> EnemiesCamps { get; set; }
+    public Dictionary<GameObject, SpawnBlocker> SpawnBlockers { get; set; }
 
     [SerializeField] private TextMeshProUGUI enemiesCampsLeftText;
     [SerializeField] private TextMeshProUGUI enemiesLeftText;
@@ -24,6 +25,7 @@ public class EnemyUnitsManager : MonoBehaviour
         Instance = this;
         Enemies = new Dictionary<GameObject, BaseUnitController>();
         EnemiesCamps = new List<UnitsCamp>();
+        SpawnBlockers = new Dictionary<GameObject, SpawnBlocker>();
     }
 
     public void RemoveCamp(UnitsCamp camp)
@@ -61,6 +63,22 @@ public class EnemyUnitsManager : MonoBehaviour
         {
             Enemies.Add(unit.gameObject, unit);
             UpdateEnemiesText();
+        }
+    }
+
+    public void AddSpawnBlocker(SpawnBlocker spawnBlocker)
+    {
+        if (!SpawnBlockers.ContainsValue(spawnBlocker))
+        {
+            SpawnBlockers.Add(spawnBlocker.gameObject, spawnBlocker);
+        }
+    }
+
+    public void RemoveSpawnBlocker(SpawnBlocker spawnBlocker)
+    {
+        if (SpawnBlockers.ContainsValue(spawnBlocker))
+        {
+            SpawnBlockers.Remove(spawnBlocker.gameObject);
         }
     }
     private void UpdateCampText()

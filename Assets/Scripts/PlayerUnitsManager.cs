@@ -76,6 +76,12 @@ public class PlayerUnitsManager : MonoBehaviour
             if (PlayerMoney >= unit.Cost)
             {
                 Vector2 spawnPosition = camera.ScreenToWorldPoint(Input.mousePosition);
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(spawnPosition, 1);
+
+                bool isSpawnBlocked = colliders.Any(c => EnemyUnitsManager.Instance.SpawnBlockers.ContainsKey(c.gameObject));
+                if (isSpawnBlocked)
+                    return;
+
                 SpawnUnit(spawnPosition);
 
                 PlayerMoney -= unit.Cost;

@@ -18,5 +18,6 @@ namespace Assets.Scripts.Constants
         //Enemies
         HumanKnight = 10,
         HumanArcher = 11,
+        HumanCleric = 12,
     }
 }
